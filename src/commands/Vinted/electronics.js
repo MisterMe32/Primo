@@ -319,12 +319,14 @@ export default {
         );
 
         let firstRun = true;
-
-       const browser = await chromium.launch({
-   headless: true,
-   args: ['--no-sandbox', '--disable-setuid-sandbox']
+const browser = await chromium.launch({
+    executablePath: '/usr/bin/chromium-browser',
+    headless: true,
+    args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox'
+    ]
 });
-
         const page =
             await browser.newPage();
 
