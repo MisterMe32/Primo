@@ -353,6 +353,9 @@ export default {
                     const url =
 `https://www.vinted.nl/catalog?search_text=${encodeURIComponent(term)}&order=newest_first`;
 
+await page.setExtraHTTPHeaders({
+   'Accept-Language': 'en-US,en;q=0.9'
+});
                     await page.goto(url, {
 
                         waitUntil:
