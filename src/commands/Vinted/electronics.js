@@ -663,14 +663,15 @@ card.querySelector('img')
             } catch (err) {
 
                 console.log(err);
+}  finally {
 
-            } finally {
+   runningSearches.set(
+      searchKey,
+      false
+   );
 
-                runningSearches.set(
-                    searchKey,
-                    false
-                );
-            }
+   activeSearches.delete(searchKey);
+}
 
         }, 45000);
     }
