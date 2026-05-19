@@ -1,0 +1,677 @@
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { chromium } from 'playwright';
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+});
+
+const seenItems = new Set();
+const activeSearches = new Set();
+const runningSearches = new Map();
+
+const blockedWords = [
+
+    // accessoires
+    'hoesje',
+    'case',
+    'cover',
+    'charger',
+    'oplader',
+    'dock only',
+    'joycon only',
+    'controller only',
+    'alleen controller',
+    'tablet only',
+
+    // defect
+    'kapot',
+    'defect',
+    'werkt niet',
+    'repair',
+    'onderdelen',
+    'for parts',
+
+    // fake / scam
+    'empty box',
+    'doos only',
+    'icloud locked',
+    'account only',
+
+    // irrelevante dingen
+    'gezocht',
+    'huur',
+    'verhuur'
+];
+
+// AGRESSIEVE FLIP PRIJZEN
+const products = {
+
+    // SWITCH
+    switchLite: {
+        keywords: [
+            'switch lite'
+        ],
+        resale: 120,
+        maxBuy: 65,
+        type: 'SWITCH LITE'
+    },
+
+    switchOLED: {
+        keywords: [
+            'switch oled'
+        ],
+        resale: 250,
+        maxBuy: 170,
+        type: 'SWITCH OLED'
+    },
+
+    switchNormal: {
+        keywords: [
+            'nintendo switch'
+        ],
+        resale: 150,
+        maxBuy: 85,
+        type: 'SWITCH'
+    },
+
+    // PS5
+    ps5Digital: {
+        keywords: [
+            'ps5 digital',
+            'playstation 5 digital'
+        ],
+        resale: 300,
+        maxBuy: 220,
+        type: 'PS5 DIGITAL'
+    },
+
+    ps5Slim: {
+        keywords: [
+            'ps5 slim'
+        ],
+        resale: 390,
+        maxBuy: 320,
+        type: 'PS5 SLIM'
+    },
+
+    ps5Standard: {
+        keywords: [
+            'ps5',
+            'playstation 5'
+        ],
+        resale: 340,
+        maxBuy: 260,
+        type: 'PS5'
+    },
+
+    // IPHONES
+    iphone11: {
+        keywords: [
+            'iphone 11'
+        ],
+        resale: 220,
+        maxBuy: 140,
+        type: 'IPHONE 11'
+    },
+
+    iphone12: {
+        keywords: [
+            'iphone 12'
+        ],
+        resale: 280,
+        maxBuy: 190,
+        type: 'IPHONE 12'
+    },
+
+    iphone13: {
+        keywords: [
+            'iphone 13'
+        ],
+        resale: 420,
+        maxBuy: 300,
+        type: 'IPHONE 13'
+    },
+
+    // SAMSUNG
+    samsungA54: {
+        keywords: [
+            'samsung a54',
+            'galaxy a54'
+        ],
+        resale: 220,
+        maxBuy: 140,
+        type: 'SAMSUNG A54'
+    },
+
+    samsungS23: {
+        keywords: [
+            's23',
+            'galaxy s23'
+        ],
+        resale: 420,
+        maxBuy: 280,
+        type: 'S23'
+    },
+
+    // STEAM DECK
+    steamDeck: {
+        keywords: [
+            'steam deck'
+        ],
+        resale: 350,
+        maxBuy: 240,
+        type: 'STEAM DECK'
+    },
+
+    // MACBOOKS
+    macbookAir: {
+        keywords: [
+            'macbook air'
+        ],
+        resale: 500,
+        maxBuy: 320,
+        type: 'MACBOOK AIR'
+    },
+
+    macbookPro: {
+        keywords: [
+            'macbook pro'
+        ],
+        resale: 750,
+        maxBuy: 500,
+        type: 'MACBOOK PRO'
+    }
+};
+
+function detectProduct(title) {
+
+    title = title.toLowerCase();
+
+    for (const product of Object.values(products)) {
+
+        for (const keyword of product.keywords) {
+
+            if (title.includes(keyword)) {
+                return product;
+            }
+        }
+    }
+
+    return null;
+}
+
+async function analyzeDealAI({
+
+    title,
+    price,
+    productType
+
+}) {
+
+    try {
+
+        const prompt = `
+
+Je bent een professionele reseller / flip expert.
+
+Analyseer deze Vinted listing.
+
+Titel:
+${title}
+
+Prijs:
+€${price}
+
+Product:
+${productType}
+
+Geef ALLEEN JSON terug.
+
+Format:
+
+{
+  "score": number,
+  "estimatedResale": number,
+  "suggestedOffer": number,
+  "risk": "low" | "medium" | "high",
+  "summary": "korte uitleg"
+}
+
+Belangrijk:
+- Denk als agressieve reseller
+- Gebruik snelle doorverkoopprijzen
+- Wees conservatief
+- Hoge score alleen bij echte goede flips
+`;
+
+        const completion =
+            await openai.chat.completions.create({
+
+                model: 'gpt-4o-mini',
+
+                messages: [
+
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+
+                temperature: 0.2
+            });
+
+        const text =
+            completion.choices[0]
+                .message.content;
+
+        return JSON.parse(text);
+
+    } catch (err) {
+
+        console.log(
+            'AI ERROR:',
+            err
+        );
+
+        return null;
+    }
+}
+
+export default {
+
+    data: new SlashCommandBuilder()
+
+        .setName('electronics')
+
+        .setDescription(
+            'Scan Vinted electronics flips'
+        )
+
+        .addIntegerOption(option =>
+            option
+                .setName('maxprijs')
+                .setDescription('Max prijs')
+                .setRequired(true)
+        ),
+
+    async execute(interaction) {
+
+        const maxprijs =
+            interaction.options.getInteger(
+                'maxprijs'
+            );
+
+        const searchKey =
+            `electronics-${maxprijs}`;
+
+        if (activeSearches.has(searchKey)) {
+
+            return interaction.reply(
+                '⚠️ Scanner draait al.'
+            );
+        }
+
+        activeSearches.add(searchKey);
+
+        await interaction.reply(
+            `🔎 AI Electronics scanner gestart onder €${maxprijs}`
+        );
+
+        let firstRun = true;
+
+        const browser = await chromium.launch({
+            headless: true
+        });
+
+        const page =
+            await browser.newPage();
+
+        setInterval(async () => {
+
+            if (runningSearches.get(searchKey)) {
+                return;
+            }
+
+            runningSearches.set(searchKey, true);
+
+            try {
+
+                const searchTerms = [
+
+                    'ps5',
+                    'nintendo switch',
+                    'iphone',
+                    'steam deck',
+                    'macbook',
+                    'samsung'
+                ];
+
+                for (const term of searchTerms) {
+
+                    const url =
+`https://www.vinted.nl/catalog?search_text=${encodeURIComponent(term)}&order=newest_first`;
+
+                    await page.goto(url, {
+
+                        waitUntil:
+                            'domcontentloaded',
+
+                        timeout: 60000
+                    });
+
+                    await page.waitForTimeout(3000);
+
+                    const items =
+                        await page.$$eval(
+
+                            '[data-testid="grid-item"]',
+
+                            cards => {
+
+                                return cards.map(card => {
+
+                                    const title =
+card.querySelector(
+'.web_ui__ItemBox__title'
+)?.innerText || '';
+
+                                    const price =
+card.querySelector(
+'.web_ui__ItemBox__price'
+)?.innerText || '';
+
+                                    const link =
+card.querySelector('a')
+?.href || '';
+
+                                    const image =
+card.querySelector('img')
+?.src || '';
+
+                                    return {
+
+                                        title,
+                                        price,
+                                        link,
+                                        image
+                                    };
+                                });
+                            }
+                        );
+
+                    console.log(
+                        `${term}:`,
+                        items.length
+                    );
+
+                    for (const item of items) {
+
+                        const title =
+                            item.title.toLowerCase();
+
+                        // blocked words
+                        if (
+                            blockedWords.some(word =>
+                                title.includes(word)
+                            )
+                        ) {
+                            continue;
+                        }
+
+                        // detectie
+                        const product =
+                            detectProduct(title);
+
+                        if (!product) {
+                            continue;
+                        }
+
+                        // prijs
+                        const price =
+                            Number(
+                                item.price
+
+                                    .replace('€', '')
+                                    .replace(',', '.')
+                                    .trim()
+                            );
+
+                        if (
+                            !price ||
+                            isNaN(price)
+                        ) {
+                            continue;
+                        }
+
+                        if (price > maxprijs) {
+                            continue;
+                        }
+
+                        if (
+                            price > product.maxBuy
+                        ) {
+                            continue;
+                        }
+
+                        const itemId =
+                            item.link;
+
+                        if (
+                            seenItems.has(itemId)
+                        ) {
+                            continue;
+                        }
+
+                        // eerste scan skippen
+                        if (firstRun) {
+
+                            seenItems.add(itemId);
+                            continue;
+                        }
+
+                        seenItems.add(itemId);
+
+                        // AI ANALYSE
+                        let estimatedValue =
+                            product.resale;
+
+                        let suggestedOffer =
+                            Math.floor(price * 0.85);
+
+                        let aiScore = 70;
+
+                        let aiRisk = 'medium';
+
+                        let aiSummary =
+                            'Standaard analyse';
+
+                        const ai =
+                            await analyzeDealAI({
+
+                                title: item.title,
+                                price,
+                                productType:
+                                    product.type
+                            });
+
+                        if (ai) {
+
+                            estimatedValue =
+                                ai.estimatedResale
+                                || estimatedValue;
+
+                            suggestedOffer =
+                                ai.suggestedOffer
+                                || suggestedOffer;
+
+                            aiScore =
+                                ai.score
+                                || aiScore;
+
+                            aiRisk =
+                                ai.risk
+                                || aiRisk;
+
+                            aiSummary =
+                                ai.summary
+                                || aiSummary;
+                        }
+
+                        const profit =
+                            estimatedValue - price;
+
+                        // alleen goede flips
+                        if (profit < 40) {
+                            continue;
+                        }
+
+                        let dealRating =
+                            '🟢 GOEDE DEAL';
+
+                        if (profit >= 140) {
+
+                            dealRating =
+                                '🔥 INSANE DEAL';
+                        }
+
+                        else if (profit >= 90) {
+
+                            dealRating =
+                                '🟡 HEEL GOEDE DEAL';
+                        }
+
+                        const embed =
+                            new EmbedBuilder()
+
+                                .setTitle(
+`${dealRating} • ${item.title}`
+                                )
+
+                                .setURL(item.link)
+
+                                .setColor(0x00AE86)
+
+                                .addFields(
+
+                                    {
+                                        name:
+                                            '💶 Prijs',
+
+                                        value:
+                                            `€${price}`,
+
+                                        inline: true
+                                    },
+
+                                    {
+                                        name:
+                                            '📈 Potentiële winst',
+
+                                        value:
+                                            `€${profit}`,
+
+                                        inline: true
+                                    },
+
+                                    {
+                                        name:
+                                            '🤖 AI Score',
+
+                                        value:
+                                            `${aiScore}/100`,
+
+                                        inline: true
+                                    },
+
+                                    {
+                                        name:
+                                            '⚠️ AI Risico',
+
+                                        value:
+                                            aiRisk,
+
+                                        inline: true
+                                    },
+
+                                    {
+                                        name:
+                                            '💬 AI Bod',
+
+                                        value:
+`€${suggestedOffer}`,
+
+                                        inline: true
+                                    },
+
+                                    {
+                                        name:
+                                            '💸 Verwachte verkoop',
+
+                                        value:
+`~€${estimatedValue}`,
+
+                                        inline: true
+                                    },
+
+                                    {
+                                        name:
+                                            '📦 Product',
+
+                                        value:
+                                            product.type,
+
+                                        inline: true
+                                    },
+
+                                    {
+                                        name:
+                                            '🧠 AI Analyse',
+
+                                        value:
+                                            aiSummary
+                                    }
+                                )
+
+                                .setFooter({
+
+                                    text:
+'Primo AI Electronics'
+                                })
+
+                                .setTimestamp();
+
+                        if (item.image) {
+
+                            embed.setImage(
+                                item.image
+                            );
+                        }
+
+                        await interaction.channel.send({
+
+                            content:
+`🚨 AI VINTED DEAL <@638981298555322368>`,
+
+                            embeds: [embed]
+                        });
+                    }
+                }
+
+                firstRun = false;
+
+            } catch (err) {
+
+                console.log(err);
+
+            } finally {
+
+                runningSearches.set(
+                    searchKey,
+                    false
+                );
+            }
+
+        }, 45000);
+    }
+};
