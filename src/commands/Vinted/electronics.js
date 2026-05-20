@@ -431,7 +431,7 @@ card.querySelector('img')
                             detectProduct(title);
 
                        if (!product) {
-   console.log("NO PRODUCT:", title);
+  console.log("NO PRODUCT:", title);
    continue;
 }
 
