@@ -377,15 +377,12 @@ await page.setExtraHTTPHeaders({
 
                                 return cards.map(card => {
 
-                                    const title =
-card.querySelector(
-'.web_ui__ItemBox__title'
-)?.innerText || '';
-
-                                    const price =
-card.querySelector(
-'.web_ui__ItemBox__price'
-)?.innerText || '';
+                                   const title =
+card.querySelector('[data-testid="item-box-title"]')
+?.innerText || '';
+                                  const price =
+card.querySelector('[data-testid="item-box-price"]')
+?.innerText || '';
 
                                     const link =
 card.querySelector('a')
@@ -436,14 +433,11 @@ card.querySelector('img')
 }
 
                         // prijs
-                        const price =
-                            Number(
-                                item.price
-
-                                    .replace('€', '')
-                                    .replace(',', '.')
-                                    .trim()
-                            );
+                        const price = Number(
+    item.price
+        .replace(/[^\d,]/g, '')
+        .replace(',', '.')
+);
 
                         if (
                             !price ||
@@ -679,8 +673,6 @@ console.log("SENDING ITEM");
       searchKey,
       false
    );
-
-   activeSearches.delete(searchKey);
 }
 
         }, 45000);
