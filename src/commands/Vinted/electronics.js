@@ -377,11 +377,11 @@ await page.setExtraHTTPHeaders({
 
                                 return cards.map(card => {
 
-                                   const title =
-    card.querySelector('[data-testid="item-box-title"]')
-    ?.innerText || '';
+                                  const title =
+    card.querySelector('img')
+    ?.alt || '';
                                   const price = 
-card.querySelector('[data-testid="item-box-price"]')
+                                  card.querySelector('[data-testid="item-box-price"]')
 ?.innerText || '';
 
                                     const link =
