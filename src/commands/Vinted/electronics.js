@@ -653,7 +653,8 @@ card.querySelector('img')
                                 item.image
                             );
                         }
-
+console.log(item.title, item.price);
+console.log("SENDING ITEM");
                         await interaction.channel.send({
 
                             content:
