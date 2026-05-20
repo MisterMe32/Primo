@@ -378,7 +378,7 @@ await page.setExtraHTTPHeaders({
                                 return cards.map(card => {
 
                                    const title =
-card.querySelector('[data-testid="item-box-title"]')
+card.querySelector('a')
 ?.innerText || '';
                                   const price = 
 card.querySelector('[data-testid="item-box-price"]')
