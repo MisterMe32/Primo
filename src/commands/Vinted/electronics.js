@@ -380,7 +380,7 @@ await page.setExtraHTTPHeaders({
                                    const title =
 card.querySelector('[data-testid="item-box-title"]')
 ?.innerText || '';
-                                  const price =
+                                  const price = 
 card.querySelector('[data-testid="item-box-price"]')
 ?.innerText || '';
 
