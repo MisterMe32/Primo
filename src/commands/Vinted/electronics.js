@@ -422,6 +422,7 @@ card.querySelector('img')
                                 title.includes(word)
                             )
                         ) {
+                            console.log("BLOCKED:", title);
                             continue;
                         }
 
@@ -429,9 +430,10 @@ card.querySelector('img')
                         const product =
                             detectProduct(title);
 
-                        if (!product) {
-                            continue;
-                        }
+                       if (!product) {
+   console.log("NO PRODUCT:", title);
+   continue;
+}
 
                         // prijs
                         const price =
@@ -450,9 +452,10 @@ card.querySelector('img')
                             continue;
                         }
 
-                        if (price > maxprijs) {
-                            continue;
-                        }
+                      if (price > maxprijs) {
+   console.log("PRICE TOO HIGH:", title, price);
+   continue;
+}
 
                         if (
                             price > product.maxBuy
