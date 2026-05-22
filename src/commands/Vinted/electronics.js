@@ -49,9 +49,11 @@ const products = {
 
     // SWITCH
     switchLite: {
-        keywords: [
-            'switch lite'
-        ],
+      keywords: [
+    'switch lite',
+    'lite switch',
+    'nintendo lite'
+],
         resale: 120,
         maxBuy: 65,
         type: 'SWITCH LITE'
@@ -59,17 +61,23 @@ const products = {
 
     switchOLED: {
         keywords: [
-            'switch oled'
-        ],
+    'switch oled',
+    'oled switch',
+    'nintendo oled'
+],
         resale: 250,
         maxBuy: 220,
         type: 'SWITCH OLED'
     },
 
     switchNormal: {
-        keywords: [
-            'nintendo switch'
-        ],
+    keywords: [
+        'switch',
+        'nintendo switch',
+        'switch console',
+        'switch v1',
+        'switch v2'
+    ],
         resale: 150,
         maxBuy: 130,
         type: 'SWITCH'
@@ -77,19 +85,21 @@ const products = {
 
     // PS5
     ps5Digital: {
-        keywords: [
-            'ps5 digital',
-            'playstation 5 digital'
-        ],
+       keywords: [
+    'ps5 digital',
+    'playstation 5 digital',
+    'digital edition'
+],
         resale: 300,
         maxBuy: 220,
         type: 'PS5 DIGITAL'
     },
 
     ps5Slim: {
-        keywords: [
-            'ps5 slim'
-        ],
+       keywords: [
+    'ps5 slim',
+    'playstation 5 slim'
+],
         resale: 390,
         maxBuy: 320,
         type: 'PS5 SLIM'
@@ -97,9 +107,12 @@ const products = {
 
     ps5Standard: {
         keywords: [
-            'ps5',
-            'playstation 5'
-        ],
+    'ps5',
+    'playstation 5',
+    'playstation5',
+    'ps 5',
+    'sony ps5'
+],
         resale: 340,
         maxBuy: 330,
         type: 'PS5'
@@ -107,27 +120,33 @@ const products = {
 
     // IPHONES
     iphone11: {
-        keywords: [
-            'iphone 11'
-        ],
+       keywords: [
+    'iphone 11',
+    '11 pro',
+    '11 pro max'
+],
         resale: 220,
         maxBuy: 140,
         type: 'IPHONE 11'
     },
 
     iphone12: {
-        keywords: [
-            'iphone 12'
-        ],
+       keywords: [
+    'iphone 12',
+    '12 pro',
+    '12 pro max'
+],
         resale: 280,
         maxBuy: 190,
         type: 'IPHONE 12'
     },
 
     iphone13: {
-        keywords: [
-            'iphone 13'
-        ],
+       keywords: [
+    'iphone 13',
+    '13 pro',
+    '13 pro max'
+],
         resale: 420,
         maxBuy: 380,
         type: 'IPHONE 13'
@@ -135,20 +154,23 @@ const products = {
 
     // SAMSUNG
     samsungA54: {
-        keywords: [
-            'samsung a54',
-            'galaxy a54'
-        ],
+       keywords: [
+    'a54',
+    'samsung a54',
+    'galaxy a54'
+],
         resale: 220,
         maxBuy: 140,
         type: 'SAMSUNG A54'
     },
 
     samsungS23: {
-        keywords: [
-            's23',
-            'galaxy s23'
-        ],
+      keywords: [
+    's23',
+    's23 ultra',
+    'galaxy s23',
+    'samsung s23'
+],
         resale: 420,
         maxBuy: 280,
         type: 'S23'
@@ -156,9 +178,12 @@ const products = {
 
     // STEAM DECK
     steamDeck: {
-        keywords: [
-            'steam deck'
-        ],
+       keywords: [
+    'steam deck',
+    'steamdeck',
+    'deck 256',
+    'deck 512'
+],
         resale: 350,
         maxBuy: 300,
         type: 'STEAM DECK'
@@ -166,18 +191,24 @@ const products = {
 
     // MACBOOKS
     macbookAir: {
-        keywords: [
-            'macbook air'
-        ],
+       keywords: [
+    'macbook air',
+    'mac air',
+    'm1 air',
+    'm2 air'
+],
         resale: 500,
         maxBuy: 450,
         type: 'MACBOOK AIR'
     },
 
     macbookPro: {
-        keywords: [
-            'macbook pro'
-        ],
+       keywords: [
+    'macbook pro',
+    'mac pro',
+    'm1 pro',
+    'm2 pro'
+],
         resale: 750,
         maxBuy: 650,
         type: 'MACBOOK PRO'
