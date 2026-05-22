@@ -62,7 +62,7 @@ const products = {
             'switch oled'
         ],
         resale: 250,
-        maxBuy: 170,
+        maxBuy: 220,
         type: 'SWITCH OLED'
     },
 
@@ -71,7 +71,7 @@ const products = {
             'nintendo switch'
         ],
         resale: 150,
-        maxBuy: 85,
+        maxBuy: 130,
         type: 'SWITCH'
     },
 
@@ -101,7 +101,7 @@ const products = {
             'playstation 5'
         ],
         resale: 340,
-        maxBuy: 260,
+        maxBuy: 330,
         type: 'PS5'
     },
 
@@ -129,7 +129,7 @@ const products = {
             'iphone 13'
         ],
         resale: 420,
-        maxBuy: 300,
+        maxBuy: 380,
         type: 'IPHONE 13'
     },
 
@@ -160,7 +160,7 @@ const products = {
             'steam deck'
         ],
         resale: 350,
-        maxBuy: 240,
+        maxBuy: 300,
         type: 'STEAM DECK'
     },
 
@@ -170,7 +170,7 @@ const products = {
             'macbook air'
         ],
         resale: 500,
-        maxBuy: 320,
+        maxBuy: 450,
         type: 'MACBOOK AIR'
     },
 
@@ -179,7 +179,7 @@ const products = {
             'macbook pro'
         ],
         resale: 750,
-        maxBuy: 500,
+        maxBuy: 650,
         type: 'MACBOOK PRO'
     }
 };
@@ -526,7 +526,7 @@ card.querySelector('img')
                             estimatedValue - price;
 
                         // alleen goede flips
-                        if (profit < 40) {
+                        if (profit < 20) {
                             continue;
                         }
 
