@@ -232,6 +232,53 @@ function detectProduct(title) {
     return null;
 }
 
+async function aiCheck(title) {
+
+   const prompt = `
+   Titel: ${title}
+
+   Is dit:
+   - alleen een accessoire
+   OF
+   - een volledige console/bundel?
+
+   Antwoord ALLEEN met:
+
+   ACCESSORY_ONLY
+   of
+   FULL_PRODUCT
+   `;
+
+   try {
+
+      const response =
+         await openai.chat.completions.create({
+
+         model: "gpt-4o-mini",
+
+         messages: [
+            {
+               role: "user",
+               content: prompt
+            }
+         ],
+
+         max_tokens: 10
+      });
+
+      return response
+         .choices[0]
+         .message.content
+         .trim();
+
+   } catch (err) {
+
+      console.log("AI ERROR:", err);
+
+      return "ACCESSORY_ONLY";
+   }
+}
+
 async function analyzeDealAI({
 
     title,
@@ -446,14 +493,33 @@ card.querySelector('img')
                             item.title.toLowerCase();
 
                         // blocked words
-                        if (
-                            blockedWords.some(word =>
-                                title.includes(word)
-                            )
-                        ) {
-                            console.log("BLOCKED:", title);
-                            continue;
-                        }
+                       if (
+    blockedWords.some(word =>
+        title.includes(word)
+    )
+) {
+
+    console.log("SUSPICIOUS LISTING:", title);
+
+    const aiResult =
+        await aiCheck(title);
+
+    console.log("AI RESULT:", aiResult);
+
+    if (
+        aiResult ===
+        "ACCESSORY_ONLY"
+    ) {
+
+        console.log(
+            "BLOCKED ACCESSORY"
+        );
+
+        continue;
+    }
+
+    console.log("AI APPROVED");
+}
 
                         // detectie
                         const product =
