@@ -43,7 +43,6 @@ const blockedWords = [
     'huur',
     'verhuur'
 ];
-
 // AGRESSIEVE FLIP PRIJZEN
 const products = {
 
@@ -471,8 +470,9 @@ await page.setExtraHTTPHeaders({
 ?.innerText || '';
 
                                     const link =
-card.querySelector('a')
-?.href || '';
+    card.querySelector("a")?.href || "";
+
+seenItems.add(link);
 
                                     const image =
 card.querySelector('img')
