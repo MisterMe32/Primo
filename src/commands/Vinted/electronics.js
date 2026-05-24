@@ -472,7 +472,6 @@ await page.setExtraHTTPHeaders({
                                     const link =
     card.querySelector("a")?.href || "";
 
-seenItems.add(link);
 
                                     const image =
 card.querySelector('img')
@@ -495,7 +494,11 @@ card.querySelector('img')
                     );
 
                     for (const item of items) {
+if (seenItems.has(item.link)) {
+    continue;
+}
 
+seenItems.add(item.link);
                         const title =
                             item.title.toLowerCase();
 
@@ -576,20 +579,17 @@ console.log("DISCORD MESSAGE SENT");
                         const itemId =
                             item.link;
 
-                        if (
-                            seenItems.has(itemId)
-                        ) {
-                            continue;
-                        }
+                       if (seenItems.has(item.link)) {
+    continue;
+}
 
-                        // eerste scan skippen
-                        if (firstRun) {
+// eerste scan skippen
+if (firstRun) {
+    seenItems.add(item.link);
+    continue;
+}
 
-                            seenItems.add(itemId);
-                            continue;
-                        }
-
-                        seenItems.add(itemId);
+seenItems.add(item.link);
 
                         // AI ANALYSE
                         let estimatedValue =
