@@ -507,19 +507,7 @@ card.querySelector('img')
 ) {
 
     console.log("SUSPICIOUS LISTING:", title);
-console.log("AI APPROVED");
 
-console.log("SENDING DISCORD MESSAGE");
-
-interaction.channel.send({
-    content: `🔥 DEAL GEVONDEN
-
-📦 ${item.title}
-💰 €${item.price}
-🔗 ${item.link}`
-});
-
-console.log("DISCORD MESSAGE SENT");
     const aiResult =
         await aiCheck(title);
 
@@ -536,6 +524,19 @@ console.log("DISCORD MESSAGE SENT");
 
         continue;
     }
+    console.log("AI APPROVED");
+
+console.log("SENDING DISCORD MESSAGE");
+
+interaction.channel.send({
+    content: `🔥 DEAL GEVONDEN
+
+📦 ${item.title}
+💰 €${item.price}
+🔗 ${item.link}`
+});
+
+console.log("DISCORD MESSAGE SENT");
 }
 
                         // detectie
