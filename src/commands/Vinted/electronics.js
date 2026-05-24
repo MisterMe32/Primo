@@ -526,6 +526,17 @@ card.querySelector('img')
     }
 
     console.log("AI APPROVED");
+    console.log("SENDING DISCORD MESSAGE");
+
+await interaction.channel.send({
+    content: `🔥 DEAL GEVONDEN
+
+📦 ${title}
+💰 €${price}
+🔗 ${link}`
+});
+
+console.log("DISCORD MESSAGE SENT");
 }
 
                         // detectie
