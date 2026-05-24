@@ -9,6 +9,7 @@ const openai = new OpenAI({
 const seenItems = new Set();
 const activeSearches = new Set();
 const runningSearches = new Map();
+let firstRun = true;
 
 const blockedWords = [
 
@@ -395,7 +396,7 @@ export default {
             `🔎 AI Electronics scanner gestart onder €${maxprijs}`
         );
 
-        let firstRun = true;
+       
 const browser = await chromium.launch({
     executablePath: '/usr/bin/chromium-browser',
     headless: true,
@@ -497,7 +498,17 @@ card.querySelector('img')
                         
                         const title =
                             item.title.toLowerCase();
+if (seenItems.has(item.link)) {
+    continue;
+}
 
+// eerste scan skippen
+if (firstRun) {
+    seenItems.add(item.link);
+    continue;
+}
+
+seenItems.add(item.link);
                         // blocked words
                        if (
     blockedWords.some(word =>
@@ -575,17 +586,7 @@ console.log("DISCORD MESSAGE SENT");
                         const itemId =
                             item.link;
 
-                       if (seenItems.has(item.link)) {
-    continue;
-}
-
-// eerste scan skippen
-if (firstRun) {
-    seenItems.add(item.link);
-    continue;
-}
-
-seenItems.add(item.link);
+                       
 
                         // AI ANALYSE
                         let estimatedValue =
