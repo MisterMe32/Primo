@@ -10,10 +10,12 @@ export default {
         try {
 
          for (const [key, interval] of global.activeIntervals.entries()) {
-    clearInterval(interval);
+    console.log("STOPPING:", interval);
+            clearInterval(interval);
 }
 
 global.activeIntervals.clear();
+console.log("ALL INTERVALS CLEARED");
 if (global.activeBrowsers) {
   for (const [key, browser] of global.activeBrowsers.entries()) {
     try {
