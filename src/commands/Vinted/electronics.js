@@ -494,11 +494,7 @@ card.querySelector('img')
                     );
 
                     for (const item of items) {
-if (seenItems.has(item.link)) {
-    continue;
-}
-
-seenItems.add(item.link);
+                        
                         const title =
                             item.title.toLowerCase();
 
