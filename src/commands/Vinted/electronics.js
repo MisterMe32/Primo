@@ -544,17 +544,17 @@ await interaction.channel.send({
             color: 0x00ff99,
 
             title: "🔥 DEAL GEVONDEN",
-            url: link,
+            url: item.link,
 
             description:
-`📦 **${title}**
+`📦 **${item.title}**
 
-💰 **Prijs:** €${price}
-📈 **Resell:** €${estimatedValue}
-💵 **Profit:** €${estimatedValue - price}`,
+💰 **Prijs:** ${item.price}
+
+🔗 Klik op titel om te openen`,
 
             thumbnail: {
-                url: image
+                url: item.image
             },
 
             footer: {
