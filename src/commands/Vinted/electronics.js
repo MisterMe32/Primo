@@ -781,5 +781,6 @@ console.log("SENDING ITEM");
 }
 
         }, 45000);
+        global.activeIntervals.set(searchKey, interval);
     }
 };
