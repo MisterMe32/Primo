@@ -538,12 +538,32 @@ seenItems.add(item.link);
 
 console.log("SENDING DISCORD MESSAGE");
 
-interaction.channel.send({
-    content: `🔥 DEAL GEVONDEN
+await interaction.channel.send({
+    embeds: [
+        {
+            color: 0x00ff99,
 
-📦 ${item.title}
-💰 €${item.price}
-🔗 ${item.link}`
+            title: "🔥 DEAL GEVONDEN",
+            url: link,
+
+            description:
+`📦 **${title}**
+
+💰 **Prijs:** €${price}
+📈 **Resell:** €${estimatedValue}
+💵 **Profit:** €${estimatedValue - price}`,
+
+            thumbnail: {
+                url: image
+            },
+
+            footer: {
+                text: "Primo AI Scanner"
+            },
+
+            timestamp: new Date()
+        }
+    ]
 });
 
 console.log("DISCORD MESSAGE SENT");
