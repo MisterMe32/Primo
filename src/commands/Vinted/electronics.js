@@ -474,19 +474,6 @@ await page.setExtraHTTPHeaders({
 card.querySelector('a')
 ?.href || '';
 
-  console.log("AI APPROVED");
-    console.log("SENDING DISCORD MESSAGE");
-
-interaction.channel.send({
-    content: `🔥 DEAL GEVONDEN
-
-📦 ${title}
-💰 €${price}
-🔗 ${link}`
-});
-
-console.log("DISCORD MESSAGE SENT");
-
                                     const image =
 card.querySelector('img')
 ?.src || '';
