@@ -408,14 +408,16 @@ const browser = await chromium.launch({
         const page =
             await browser.newPage();
 
-        setInterval(async () => {
+            if (!global.activeIntervals) {
+    global.activeIntervals = new Map();
+}
+       const interval = setInterval(async () => {
 
             if (runningSearches.get(searchKey)) {
                 return;
             }
 
             runningSearches.set(searchKey, true);
-
             try {
 
                 const searchTerms = [

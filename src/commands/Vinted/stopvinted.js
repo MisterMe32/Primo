@@ -28,9 +28,15 @@ if (global.vintedInterval) {
     clearInterval(global.vintedInterval);
 
     global.vintedInterval = null;
+if (global.activeIntervals) {
+
+    for (const interval of global.activeIntervals.values()) {
+        clearInterval(interval);
+    }
+
+    global.activeIntervals.clear();
 }
-if (global.activeSearches) {
-    global.activeSearches.clear();
+
 }
 
 return interaction.reply({
