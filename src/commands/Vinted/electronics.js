@@ -477,7 +477,7 @@ card.querySelector('a')
   console.log("AI APPROVED");
     console.log("SENDING DISCORD MESSAGE");
 
-await interaction.channel.send({
+interaction.channel.send({
     content: `🔥 DEAL GEVONDEN
 
 📦 ${title}
