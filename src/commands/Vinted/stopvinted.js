@@ -17,11 +17,17 @@ global.activeIntervals.clear();
 if (global.activeBrowsers) {
   for (const [key, browser] of global.activeBrowsers.entries()) {
     try {
-      await browser.close();
+      browser.close();
     } catch (e) {}
 
     global.activeBrowsers.delete(key);
   }
+}
+if (global.vintedInterval) {
+
+    clearInterval(global.vintedInterval);
+
+    global.vintedInterval = null;
 }
 if (global.activeSearches) {
     global.activeSearches.clear();

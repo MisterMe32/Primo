@@ -41,8 +41,8 @@ activeSearches.add(searchKey);
 
 const url = `https://www.vinted.nl/api/v2/catalog/items?page=1&per_page=20&search_text=${encodeURIComponent(zoekterm)}&price_to=${maxprijs}&order=newest_first`;     
         let firstRun = true;
-        const interval = setInterval(async () => {
-      
+        global.vintedInterval =
+    setInterval(async () => {
         if (runningSearches.get(searchKey)) return;
 runningSearches.set(searchKey, true);
 
@@ -95,8 +95,20 @@ const blockedWords = [
   'hd camera'
 ];
 
-if (blockedWords.some(word => title.includes(word))) {
-  continue;
+if (blockedWords.some(word => text.includes(word))) {
+
+   console.log("SUSPICIOUS LISTING -> AI CHECK");
+
+   const aiResult = await aiCheck(title, description);
+
+   console.log("AI RESULT:", aiResult);
+
+   if (aiResult === "ACCESSORY_ONLY") {
+      console.log("BLOCKED ACCESSORY");
+      return;
+   }
+
+   console.log("AI APPROVED");
 }
         seenItems.add(item.id);
     }
