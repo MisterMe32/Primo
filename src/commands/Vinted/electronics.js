@@ -1,4 +1,7 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import {
+    SlashCommandBuilder,
+    EmbedBuilder
+} from 'discord.js';
 import { chromium } from 'playwright';
 import OpenAI from 'openai';
 
@@ -534,36 +537,79 @@ seenItems.add(item.link);
 
         continue;
     }
-    console.log("AI APPROVED");
+   console.log("AI APPROVED");
+
+const profit = estimatedValue - price;
+
+const embed = new EmbedBuilder()
 
 console.log("SENDING DISCORD MESSAGE");
 
+const profit = estimatedValue - price;
+
+const embed = new EmbedBuilder()
+
+.setColor(
+    profit >= 150
+        ? 0xff0000
+        : profit >= 80
+        ? 0x00ff99
+        : 0xffcc00
+)
+
+.setTitle(`🔥 ${product.type}`)
+
+.setURL(item.link)
+
+.setDescription(
+`**${item.title}**`
+)
+
+.setThumbnail(item.image)
+
+.addFields(
+
+{
+    name: '💰 Koopprijs',
+    value: `€${price}`,
+    inline: true
+},
+
+{
+    name: '📈 Resell',
+    value: `€${estimatedValue}`,
+    inline: true
+},
+
+{
+    name: '💵 Winst',
+    value: `€${profit}`,
+    inline: true
+},
+
+{
+    name: '🤖 AI Result',
+    value: aiResult,
+    inline: true
+}
+
+)
+
+.setFooter({
+    text: 'Primo AI Flipper'
+})
+
+.setTimestamp();
+
 await interaction.channel.send({
-    embeds: [
-        {
-            color: 0x00ff99,
 
-            title: "🔥 DEAL GEVONDEN",
-            url: item.link,
+    content:
+        profit >= 120
+            ? '🚨 INSANE DEAL'
+            : '🔥 Nieuwe flip gevonden',
 
-            description:
-`📦 **${item.title}**
+    embeds: [embed]
 
-💰 **Prijs:** ${item.price}
-
-🔗 Klik op titel om te openen`,
-
-            thumbnail: {
-                url: item.image
-            },
-
-            footer: {
-                text: "Primo AI Scanner"
-            },
-
-            timestamp: new Date()
-        }
-    ]
 });
 
 console.log("DISCORD MESSAGE SENT");
