@@ -542,7 +542,9 @@ seenItems.add(item.link);
 
 console.log("START DETECT PRODUCT");
 
-const product = detectProduct(title);
+const product = detectProduct(title) || {
+    type: "Unknown Product"
+};
 
 console.log("PRODUCT RESULT:", product);
 
