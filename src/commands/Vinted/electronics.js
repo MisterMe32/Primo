@@ -540,16 +540,8 @@ seenItems.add(item.link);
     }
    console.log("AI APPROVED");
 
-}
 
-                        // detectie
-                        const product =
-                            detectProduct(title);
-
-                       if (!product) {
-  console.log("NO PRODUCT:", title);
-   continue;
-}
+   const product = detectProduct(title);
 
                         // prijs
                         const price = Number(
@@ -708,7 +700,7 @@ console.log("ABOUT TO SEND");
                         });
                     }
                 }
-
+}
                
  firstRun = false;
             } catch (err) {
