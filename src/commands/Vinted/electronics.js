@@ -557,6 +557,8 @@ if (!product) {
 
 console.log("PASSED PRODUCT");
 
+console.log("NEXT LINE TEST");
+
 // prijs
 const price = Number(
     item.price
