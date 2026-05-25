@@ -673,7 +673,12 @@ console.log("EMBED CREATED");
 console.log(item.title, item.price);
 console.log("SENDING ITEM");
 console.log("ABOUT TO SEND");
-                        await interaction.channel.send({
+
+const channel = interaction.channel;
+
+console.log(channel);
+
+await channel.send({
 
                             content:
 `🚨 AI VINTED DEAL <@638981298555322368>`,
