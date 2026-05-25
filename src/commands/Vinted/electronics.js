@@ -681,7 +681,7 @@ seenItems.add(item.link);
 
     {
         name: '🧠 Analyse',
-        value: aiSummary.slice(0, 80)
+       value: aiSummary ? aiSummary.slice(0, 80) : "Geen analyse"
     }
 )
 
