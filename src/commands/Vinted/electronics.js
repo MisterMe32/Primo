@@ -659,20 +659,11 @@ const price = Number(
                         }
 console.log("REACHED EMBED");
 
-const embed = new EmbedBuilder()
-    .setTitle(`🔥 ${product.type}`)
-    .setURL(item.link)
-    .setColor(0x00AE86)
-    .addFields(
-        {
-            name: "💰 Prijs",
-            value: `${price}`,
-            inline: true
-        }
-    );
+console.log("REACHED EMBED");
+
+const embed = new EmbedBuilder();
 
 console.log("EMBED CREATED");
-
    
 
                         if (item.image) {
