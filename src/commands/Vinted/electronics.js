@@ -416,6 +416,7 @@ const browser = await chromium.launch({
 }
       const interval = setInterval(async () => {
 
+
     console.log("INTERVAL RUNNING:", searchKey);
 
     if (runningSearches.get(searchKey)) {
@@ -539,80 +540,6 @@ seenItems.add(item.link);
     }
    console.log("AI APPROVED");
 
-const profit = estimatedValue - price;
-
-const embed = new EmbedBuilder()
-
-console.log("SENDING DISCORD MESSAGE");
-
-const profit = estimatedValue - price;
-
-const embed = new EmbedBuilder()
-
-.setColor(
-    profit >= 150
-        ? 0xff0000
-        : profit >= 80
-        ? 0x00ff99
-        : 0xffcc00
-)
-
-.setTitle(`🔥 ${product.type}`)
-
-.setURL(item.link)
-
-.setDescription(
-`**${item.title}**`
-)
-
-.setThumbnail(item.image)
-
-.addFields(
-
-{
-    name: '💰 Koopprijs',
-    value: `€${price}`,
-    inline: true
-},
-
-{
-    name: '📈 Resell',
-    value: `€${estimatedValue}`,
-    inline: true
-},
-
-{
-    name: '💵 Winst',
-    value: `€${profit}`,
-    inline: true
-},
-
-{
-    name: '🤖 AI Result',
-    value: aiResult,
-    inline: true
-}
-
-)
-
-.setFooter({
-    text: 'Primo AI Flipper'
-})
-
-.setTimestamp();
-
-await interaction.channel.send({
-
-    content:
-        profit >= 120
-            ? '🚨 INSANE DEAL'
-            : '🔥 Nieuwe flip gevonden',
-
-    embeds: [embed]
-
-});
-
-console.log("DISCORD MESSAGE SENT");
 }
 
                         // detectie
@@ -726,9 +653,7 @@ console.log("DISCORD MESSAGE SENT");
                         const embed =
                             new EmbedBuilder()
 
-                                .setTitle(
-`${dealRating} • ${item.title}`
-                                )
+                            .setTitle(`🔥 ${product.type}`)
 
                                 .setURL(item.link)
 
@@ -811,7 +736,7 @@ console.log("DISCORD MESSAGE SENT");
                                             '🧠 AI Analyse',
 
                                         value:
-                                            aiSummary
+    aiSummary.slice(0, 120)
                                     }
                                 )
 
@@ -825,9 +750,7 @@ console.log("DISCORD MESSAGE SENT");
 
                         if (item.image) {
 
-                            embed.setImage(
-                                item.image
-                            );
+                         embed.setThumbnail(item.image);
                         }
 console.log(item.title, item.price);
 console.log("SENDING ITEM");
