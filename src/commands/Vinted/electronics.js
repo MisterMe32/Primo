@@ -538,16 +538,22 @@ seenItems.add(item.link);
 
         continue;
     }
-   console.log("AI APPROVED");
+  console.log("AI APPROVED");
+
+console.log("START DETECT PRODUCT");
 
 const product = detectProduct(title);
 
+console.log("PRODUCT RESULT:", product);
+
 if (!product) {
 
-    console.log("PRODUCT NOT FOUND:", title);
+    console.log("PRODUCT NOT FOUND");
 
     continue;
 }
+
+console.log("PASSED PRODUCT");
 
 // prijs
 const price = Number(
