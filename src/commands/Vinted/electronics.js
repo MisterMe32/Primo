@@ -643,22 +643,20 @@ const price = Number(
                             continue;
                         }
 
-                        let dealRating =
-                            '🟢 GOEDE DEAL';
+                       let dealRating =
+    '🟢 GOEDE DEAL';
 
-                        if (profit >= 140) {
+if (profit >= 140) {
 
-                            dealRating =
-                                '🔥 INSANE DEAL';
-                        }
+    dealRating =
+        '🔥 INSANE DEAL';
 
-                        else if (profit >= 90) {
+} else if (profit >= 90) {
 
-                            dealRating =
-                                '🟡 HEEL GOEDE DEAL';
-                        }
-console.log("REACHED EMBED");
-
+    dealRating =
+        '🟡 HEEL GOEDE DEAL';
+}
+                        
 console.log("REACHED EMBED");
 
 const embed = new EmbedBuilder();
