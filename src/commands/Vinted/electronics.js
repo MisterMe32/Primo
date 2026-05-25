@@ -654,8 +654,12 @@ const price = Number(
                                 '🟡 HEEL GOEDE DEAL';
                         }
 console.log("REACHED EMBED");
-                        const embed = new EmbedBuilder()
+                     
+             const embed = new EmbedBuilder()
 
+console.log("EMBED CREATED");
+
+embed 
                             .setTitle(`🔥 ${product.type}`)
 
                                 .setURL(item.link)
