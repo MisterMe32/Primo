@@ -540,11 +540,17 @@ seenItems.add(item.link);
     }
    console.log("AI APPROVED");
 
+const product = detectProduct(title);
 
-   const product = detectProduct(title);
+if (!product) {
 
-                        // prijs
-                        const price = Number(
+    console.log("PRODUCT NOT FOUND:", title);
+
+    continue;
+}
+
+// prijs
+const price = Number(
     item.price
         .replace(/[^\d,]/g, '')
         .replace(',', '.')
