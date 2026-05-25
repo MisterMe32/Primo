@@ -658,51 +658,22 @@ const price = Number(
                                 '🟡 HEEL GOEDE DEAL';
                         }
 console.log("REACHED EMBED");
-                     
-             const embed = new EmbedBuilder()
+
+const embed = new EmbedBuilder()
+    .setTitle(`🔥 ${product.type}`)
+    .setURL(item.link)
+    .setColor(0x00AE86)
+    .addFields(
+        {
+            name: "💰 Prijs",
+            value: `${price}`,
+            inline: true
+        }
+    );
 
 console.log("EMBED CREATED");
 
-embed 
-                            .setTitle(`🔥 ${product.type}`)
-
-                                .setURL(item.link)
-
-                                .setColor(0x00AE86)
-
-                             .addFields(
-
-    {
-        name: '💶 Prijs',
-        value: `€${price}`,
-        inline: true
-    },
-
-    {
-        name: '📈 Winst',
-        value: `€${profit}`,
-        inline: true
-    },
-
-    {
-        name: '🤖 AI Score',
-        value: `${aiScore}/100`,
-        inline: true
-    },
-
-    {
-        name: '🧠 Analyse',
-       value: aiSummary ? aiSummary.slice(0, 80) : "Geen analyse"
-    }
-)
-
-                                .setFooter({
-
-                                    text:
-'Primo AI Electronics'
-                                })
-
-                                .setTimestamp();
+   
 
                         if (item.image) {
 
