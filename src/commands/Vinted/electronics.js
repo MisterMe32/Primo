@@ -659,86 +659,31 @@ seenItems.add(item.link);
 
                                 .setColor(0x00AE86)
 
-                                .addFields(
+                             .addFields(
 
-                                    {
-                                        name:
-                                            '💶 Prijs',
+    {
+        name: '💶 Prijs',
+        value: `€${price}`,
+        inline: true
+    },
 
-                                        value:
-                                            `€${price}`,
+    {
+        name: '📈 Winst',
+        value: `€${profit}`,
+        inline: true
+    },
 
-                                        inline: true
-                                    },
+    {
+        name: '🤖 AI Score',
+        value: `${aiScore}/100`,
+        inline: true
+    },
 
-                                    {
-                                        name:
-                                            '📈 Potentiële winst',
-
-                                        value:
-                                            `€${profit}`,
-
-                                        inline: true
-                                    },
-
-                                    {
-                                        name:
-                                            '🤖 AI Score',
-
-                                        value:
-                                            `${aiScore}/100`,
-
-                                        inline: true
-                                    },
-
-                                    {
-                                        name:
-                                            '⚠️ AI Risico',
-
-                                        value:
-                                            aiRisk,
-
-                                        inline: true
-                                    },
-
-                                    {
-                                        name:
-                                            '💬 AI Bod',
-
-                                        value:
-`€${suggestedOffer}`,
-
-                                        inline: true
-                                    },
-
-                                    {
-                                        name:
-                                            '💸 Verwachte verkoop',
-
-                                        value:
-`~€${estimatedValue}`,
-
-                                        inline: true
-                                    },
-
-                                    {
-                                        name:
-                                            '📦 Product',
-
-                                        value:
-                                            product.type,
-
-                                        inline: true
-                                    },
-
-                                    {
-                                        name:
-                                            '🧠 AI Analyse',
-
-                                        value:
-    aiSummary.slice(0, 120)
-                                    }
-                                )
+    {
+        name: '🧠 Analyse',
+        value: aiSummary.slice(0, 80)
+    }
+)
 
                                 .setFooter({
 
