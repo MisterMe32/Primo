@@ -649,9 +649,8 @@ seenItems.add(item.link);
                             dealRating =
                                 '🟡 HEEL GOEDE DEAL';
                         }
-
-                        const embed =
-                            new EmbedBuilder()
+console.log("REACHED EMBED");
+                        const embed = new EmbedBuilder()
 
                             .setTitle(`🔥 ${product.type}`)
 
@@ -699,6 +698,7 @@ seenItems.add(item.link);
                         }
 console.log(item.title, item.price);
 console.log("SENDING ITEM");
+console.log("ABOUT TO SEND");
                         await interaction.channel.send({
 
                             content:
@@ -709,8 +709,8 @@ console.log("SENDING ITEM");
                     }
                 }
 
-                firstRun = false;
-
+               
+ firstRun = false;
             } catch (err) {
 
                 console.log(err);
