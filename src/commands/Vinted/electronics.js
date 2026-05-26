@@ -409,10 +409,10 @@ export default {
                     const searchTerms = [
 
     // PLAYSTATION
-    'ps5',
-    'playstation 5',
-    'playstation5',
-    'ps 5',
+    'ps5 console',
+    'ps5 disc',
+    'ps5 slim',
+    'ps5 digital',    
 
     // SWITCH
     'nintendo switch',
@@ -420,11 +420,11 @@ export default {
     'switch lite',
 
     // IPHONE
-    'iphone',
     'iphone 11',
     'iphone 12',
     'iphone 13',
     'iphone 14',
+    'iphone 15',
 
     // IPAD
     'ipad',
@@ -432,10 +432,10 @@ export default {
     'ipad pro',
 
     // SAMSUNG
-    'samsung',
-    's23',
-    's24',
-    'galaxy',
+    's23 ultra',
+    's24 ultra',
+    'galaxy s23',
+    'galaxy s24',
 
     // STEAM DECK
     'steam deck',
@@ -565,7 +565,22 @@ const hardBlocked = [
     'icloud locked',
     'account only',
     'tablet only',
-    'doos only'
+    'doos only',
+    'ps4 game',
+'ps5 game',
+'fifa',
+'fc24',
+'cod',
+'call of duty',
+'gta',
+'elden ring',
+'controller',
+'headset',
+'wheel',
+'joystick',
+'steelseries',
+'astro',
+'dualsense'
 ];
 
 if (
@@ -641,7 +656,7 @@ const baseEstimatedValue =
 const rawProfit =
     baseEstimatedValue - price;
 
-if (rawProfit < 20) {
+if (rawProfit < 40) {
 
     console.log(
         "RAW PROFIT TOO LOW"
@@ -728,8 +743,16 @@ if (!ai) {
                                 ai.summary ||
                                 'AI analyse';
 
-                            const profit =
-                                estimatedValue - price;
+                           const estimatedFees =
+    price * 0.12 + 7;
+
+const profit =
+    estimatedValue -
+    price -
+    estimatedFees;
+
+    const isHotDeal =
+    profit >= 120;
                               
                                 console.log(
     "PROFIT:",
@@ -747,10 +770,11 @@ if (!ai) {
                             const embed =
                                 new EmbedBuilder()
 
-                                    .setTitle(
-                                        `🔥 ${product.type}`
-                                    )
-
+                                   .setTitle(
+    isHotDeal
+        ? `🚨 HOT DEAL ${product.type}`
+        : `🔥 ${product.type}`
+)
                                     .setURL(item.link)
 
                                     .setColor(
