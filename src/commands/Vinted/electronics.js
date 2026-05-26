@@ -352,7 +352,7 @@ function detectProduct(title) {
     }
 
     // FUZZY MATCH THRESHOLD
-    if (bestScore >= 0.6) {
+    if (bestScore >= 0.85) {
 
         console.log(
             'FUZZY MATCH:',
@@ -778,7 +778,28 @@ const hardBlocked = [
     'cover',
     'case',
     'skin',
-    'faceplate'
+    'faceplate',
+    'disc',
+'cd',
+'steel case',
+'collector',
+'edition',
+'mouse',
+'keyboard',
+'stand',
+'fan',
+'cooler',
+'plate',
+'shell',
+'housing',
+'trigger',
+'repair',
+'reparatie',
+'broken',
+'kapot',
+'read description',
+'description',
+'leer beschrijving'
 ];
 
 // BLOCK ALS 1 MATCHT
@@ -798,6 +819,10 @@ if (
 
 const product =
     detectProduct(title);
+    console.log(
+    "DETECTED PRODUCT:",
+    product?.type
+);
 
                             if (!product) {
 
@@ -950,6 +975,10 @@ const profit =
     price -
     estimatedFees;
 
+    console.log(
+    "FINAL PROFIT:",
+    profit
+);
     const isHotDeal =
     profit >= 120;
                               
