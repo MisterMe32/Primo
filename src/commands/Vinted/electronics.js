@@ -662,7 +662,31 @@ console.log("REACHED EMBED");
 const embed = new EmbedBuilder();
 
 console.log("EMBED CREATED");
-   
+   embed
+    .setTitle(`🔥 ${product.type}`)
+    .setURL(item.link)
+    .setColor(0x00AE86)
+    .addFields(
+        {
+            name: '💰 Prijs',
+            value: `€${price}`,
+            inline: true
+        },
+        {
+            name: '📈 Winst',
+            value: `€${profit}`,
+            inline: true
+        },
+        {
+            name: '🤖 AI Score',
+            value: `${aiScore}/100`,
+            inline: true
+        }
+    )
+    .setFooter({
+        text: 'Primo AI Electronics'
+    })
+    .setTimestamp();
 }
                         if (item.image) {
 
