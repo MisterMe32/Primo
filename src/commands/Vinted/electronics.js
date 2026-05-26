@@ -514,7 +514,7 @@ if (firstRun) {
 
 seenItems.add(item.link);
                         // blocked words
-                       if (
+                 if (
     blockedWords.some(word =>
         title.includes(word)
     )
@@ -538,13 +538,15 @@ seenItems.add(item.link);
 
         continue;
     }
-  console.log("AI APPROVED");
+
+} else {
+
+    console.log("AI APPROVED");
+}
 
 console.log("START DETECT PRODUCT");
 
-const product = detectProduct(title) || {
-    type: "Unknown Product"
-};
+const product = detectProduct(title);
 
 console.log("PRODUCT RESULT:", product);
 
@@ -556,8 +558,6 @@ if (!product) {
 }
 
 console.log("PASSED PRODUCT");
-
-console.log("NEXT LINE TEST");
 
 // prijs
 const price = Number(
@@ -584,8 +584,7 @@ const price = Number(
                             continue;
                         }
 
-                        const itemId =
-                            item.link;
+                       
 
                        
 
@@ -642,8 +641,6 @@ const price = Number(
                         if (profit < 20) {
                             continue;
                              }
-                             
-                        let dealRating = '🟢 GOEDE DEAL';
                         
 console.log("REACHED EMBED");
 
@@ -675,11 +672,14 @@ console.log("EMBED CREATED");
         text: 'Primo AI Electronics'
     })
     .setTimestamp();
-}
-                        if (item.image) {
+
+if (item.image) {
 
                          embed.setThumbnail(item.image);
+
                         }
+
+
 console.log(item.title, item.price);
 console.log("SENDING ITEM");
 console.log("ABOUT TO SEND");
@@ -690,27 +690,32 @@ console.log(channel);
 
 await channel.send({
 
-                            content:
+    content:
 `🚨 AI VINTED DEAL <@638981298555322368>`,
 
-                            embeds: [embed]
-                        });
-                    }
-                }
-               
- firstRun = false;
-            } catch (err) {
+    embeds: [embed]
+});
 
-                console.log(err);
-}  finally {
+} 
+} // sluit for (const item of items)
 
-   runningSearches.set(
-      searchKey,
-      false
-   );
+firstRun = false;
+
+} catch (err) {
+
+    console.log(err);
+
+} finally {
+
+    runningSearches.set(
+        searchKey,
+        false
+    );
+ } 
+
+}, 45000);
+
+global.activeIntervals.set(searchKey, interval);
+
 }
-
-        }, 45000);
-        global.activeIntervals.set(searchKey, interval);
-    }
 };
