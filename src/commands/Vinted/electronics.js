@@ -514,35 +514,24 @@ if (firstRun) {
 
 seenItems.add(item.link);
                         // blocked words
-                 if (
-    blockedWords.some(word =>
-        title.includes(word)
-    )
+                 const aiResult =
+    await aiCheck(title);
+
+console.log("AI RESULT:", aiResult);
+
+if (
+    aiResult ===
+    "ACCESSORY_ONLY"
 ) {
 
-    console.log("SUSPICIOUS LISTING:", title);
+    console.log(
+        "BLOCKED ACCESSORY"
+    );
 
-    const aiResult =
-        await aiCheck(title);
-
-    console.log("AI RESULT:", aiResult);
-
-    if (
-        aiResult ===
-        "ACCESSORY_ONLY"
-    ) {
-
-        console.log(
-            "BLOCKED ACCESSORY"
-        );
-
-        continue;
-    }
-
-} else {
-
-    console.log("AI APPROVED");
+    continue;
 }
+
+console.log("AI APPROVED");
 
 console.log("START DETECT PRODUCT");
 
