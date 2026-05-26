@@ -550,76 +550,124 @@ for (const item of items) {
                             }
 
                            seenItems.add(item.link);
+// ALLEEN GOEDE PRODUCT TYPES TOESTAAN
+const allowedWords = [
 
-// SUPER HARD BLOCKS
+    // PS5
+    'ps5',
+    'playstation 5',
+    'ps5 slim',
+    'ps5 pro',
+    'ps5 digital',
+    'ps5 disc',
+
+    // SWITCH
+    'switch',
+    'switch oled',
+    'switch lite',
+    'nintendo switch',
+
+    // IPHONE
+    'iphone 11',
+    'iphone 12',
+    'iphone 13',
+    'iphone 14',
+    'iphone 15',
+
+    // IPAD
+    'ipad',
+    'ipad pro',
+    'ipad air',
+
+    // MACBOOK
+    'macbook',
+    'macbook air',
+    'macbook pro',
+
+    // SAMSUNG
+    's23',
+    's24',
+    'galaxy s23',
+    'galaxy s24',
+
+    // STEAMDECK
+    'steam deck',
+    'steamdeck'
+];
+
+// MOET MINSTENS 1 MATCHEN
+if (
+    !allowedWords.some(word =>
+        title.includes(word)
+    )
+) {
+
+    console.log(
+        "NOT ALLOWED:",
+        title
+    );
+
+    continue;
+}
+
+// HARD BLOCKS
 const hardBlocked = [
 
-    'controller only',
-    'dock only',
-    'case only',
-    'cover only',
-    'charger only',
+    // ACCESSORIES
+    'controller',
+    'dualsense',
+    'dualshock',
+    'joycon',
+    'headset',
+    'headphones',
+    'charger',
+    'dock',
+    'adapter',
+    'cable',
+    'kabel',
+    'remote',
+    'microphone',
+    'mic',
+    'camera',
+    'monitor',
+    'wheel',
+    'thrustmaster',
+
+    // GAMES
+    'fifa',
+    'fc24',
+    'fc25',
+    'call of duty',
+    'cod',
+    'gta',
+    'fortnite',
+    'minecraft',
+    'spiderman',
+    'god of war',
+    'elden ring',
+    'gran turismo',
+    'game',
+    'games',
+
+    // RANDOM SHIT
+    'lego',
+    'funko',
+    'amiibo',
+    'steelbook',
+    'disc only',
     'empty box',
     'replacement parts',
     'for parts',
     'icloud locked',
     'account only',
     'tablet only',
-    'doos only',
-    'ps4 game',
-'ps5 game',
-'fifa',
-'fc24',
-'cod',
-'call of duty',
-'gta',
-'elden ring',
-'controller',
-'headset',
-'wheel',
-'joystick',
-'steelseries',
-'astro',
-'dualsense',
-'ps4',
-'game',
-'games',
-'fifa',
-'call of duty',
-'cod',
-'controller',
-'dualshock',
-'dualsense',
-'headset',
-'headphones',
-'disc',
-'blu ray',
-'bluray',
-'steelbook',
-'cover',
-'case',
-'remote',
-'joystick',
-'joycon',
-'dock',
-'charger',
-'adapter',
-'kabel',
-'cable',
-'camera',
-'microphone',
-'mic',
-'monitor',
-'skin',
-'faceplate',
-'plate',
-'wheel',
-'thrustmaster',
-'lego',
-'funko',
-'amiibo'
+    'cover',
+    'case',
+    'skin',
+    'faceplate'
 ];
 
+// BLOCK ALS 1 MATCHT
 if (
     hardBlocked.some(word =>
         title.includes(word)
