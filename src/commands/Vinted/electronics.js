@@ -641,7 +641,7 @@ const price = Number(
                         // alleen goede flips
                         if (profit < 20) {
                             continue;
-                        }
+                        
 
                        let dealRating =
     '🟢 GOEDE DEAL';
@@ -663,7 +663,7 @@ const embed = new EmbedBuilder();
 
 console.log("EMBED CREATED");
    
-
+}
                         if (item.image) {
 
                          embed.setThumbnail(item.image);
