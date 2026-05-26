@@ -20,170 +20,283 @@ let firstRun = true;
 // PRODUCT DATABASE
 const products = {
 
+    // =========================
     // PS5
-    ps5: {
+    // =========================
+
+    ps5disc: {
         keywords: [
-            'ps5',
-            'ps 5',
-            'playstation 5',
-            'playstation5',
-            'sony ps5',
             'ps5 disc',
-            'ps5 digital',
-            'ps5 slim',
-            'ps5 console',
-            'playstation console'
-        ],
-        resale: 340,
-        maxBuy: 260,
-        type: 'PS5'
-    },
-
-    // NINTENDO SWITCH
-    switch: {
-        keywords: [
-            'switch',
-            'nintendo switch',
-            'switch oled',
-            'switch lite',
-            'oled switch',
-            'nintendo oled',
-            'lite switch',
-            'nintendo lite',
-            'switch console',
-            'switch v1',
-            'switch v2',
-            'switch bundle'
-        ],
-        resale: 180,
-        maxBuy: 120,
-        type: 'NINTENDO SWITCH'
-    },
-
-    // IPHONE 13
-    iphone13: {
-        keywords: [
-            'iphone 13',
-            '13 pro',
-            '13 pro max',
-            'iphone13',
-            'apple iphone 13',
-            '13pm',
-            '13pro',
-            'iphone 13 pro',
-            'iphone 13 pro max'
+            'ps5 disc edition',
+            'playstation 5 disc',
+            'ps5 standard'
         ],
         resale: 420,
         maxBuy: 320,
-        type: 'IPHONE 13'
+        type: 'PS5 DISC'
     },
 
-    // IPHONE 12
-    iphone12: {
+    ps5digital: {
         keywords: [
-            'iphone 12',
-            '12 pro',
-            '12 pro max',
-            'iphone12',
-            'apple iphone 12',
-            '12pm',
-            '12pro',
-            'iphone 12 pro',
-            'iphone 12 pro max'
+            'ps5 digital',
+            'playstation 5 digital'
         ],
-        resale: 300,
-        maxBuy: 220,
-        type: 'IPHONE 12'
+        resale: 340,
+        maxBuy: 260,
+        type: 'PS5 DIGITAL'
     },
 
-    // IPHONE 11
+    ps5slim: {
+        keywords: [
+            'ps5 slim',
+            'playstation 5 slim'
+        ],
+        resale: 430,
+        maxBuy: 330,
+        type: 'PS5 SLIM'
+    },
+
+    ps5pro: {
+        keywords: [
+            'ps5 pro',
+            'playstation 5 pro'
+        ],
+        resale: 700,
+        maxBuy: 560,
+        type: 'PS5 PRO'
+    },
+
+    // =========================
+    // SWITCH
+    // =========================
+
+    switcholed: {
+        keywords: [
+            'switch oled',
+            'nintendo switch oled'
+        ],
+        resale: 240,
+        maxBuy: 180,
+        type: 'SWITCH OLED'
+    },
+
+    switchlite: {
+        keywords: [
+            'switch lite',
+            'nintendo switch lite'
+        ],
+        resale: 130,
+        maxBuy: 90,
+        type: 'SWITCH LITE'
+    },
+
+    switchv1: {
+        keywords: [
+            'switch v1',
+            'nintendo switch v1'
+        ],
+        resale: 170,
+        maxBuy: 120,
+        type: 'SWITCH V1'
+    },
+
+    switchv2: {
+        keywords: [
+            'switch v2',
+            'nintendo switch v2'
+        ],
+        resale: 190,
+        maxBuy: 140,
+        type: 'SWITCH V2'
+    },
+
+    // =========================
+    // IPHONES
+    // =========================
+
     iphone11: {
         keywords: [
             'iphone 11',
-            '11 pro',
-            '11 pro max',
-            'iphone11',
-            'apple iphone 11',
-            '11pm',
-            '11pro',
             'iphone 11 pro',
             'iphone 11 pro max'
         ],
-        resale: 220,
-        maxBuy: 150,
+        resale: 240,
+        maxBuy: 170,
         type: 'IPHONE 11'
     },
 
-    // IPADS
-    ipad: {
+    iphone12: {
         keywords: [
-            'ipad',
-            'ipad air',
-            'ipad pro',
-            'ipad mini',
+            'iphone 12',
+            'iphone 12 pro',
+            'iphone 12 pro max'
+        ],
+        resale: 340,
+        maxBuy: 250,
+        type: 'IPHONE 12'
+    },
+
+    iphone13: {
+        keywords: [
+            'iphone 13',
+            'iphone 13 pro',
+            'iphone 13 pro max'
+        ],
+        resale: 460,
+        maxBuy: 350,
+        type: 'IPHONE 13'
+    },
+
+    iphone14: {
+        keywords: [
+            'iphone 14',
+            'iphone 14 pro',
+            'iphone 14 pro max'
+        ],
+        resale: 650,
+        maxBuy: 500,
+        type: 'IPHONE 14'
+    },
+
+    iphone15: {
+        keywords: [
+            'iphone 15',
+            'iphone 15 pro',
+            'iphone 15 pro max'
+        ],
+        resale: 850,
+        maxBuy: 680,
+        type: 'IPHONE 15'
+    },
+
+    // =========================
+    // IPADS
+    // =========================
+
+    ipadbasic: {
+        keywords: [
             'ipad 9',
             'ipad 10',
-            'ipad m1',
-            'ipad m2',
-            'apple ipad',
-            'ipad bundle'
+            'apple ipad'
         ],
-        resale: 350,
-        maxBuy: 240,
+        resale: 300,
+        maxBuy: 220,
         type: 'IPAD'
     },
 
-    // MACBOOKS
-    macbook: {
+   ipadair: {
         keywords: [
-            'macbook',
-            'macbook air',
-            'macbook pro',
-            'mac air',
-            'mac pro',
-            'm1 macbook',
-            'm2 macbook',
-            'apple macbook',
-            'macbook m1',
-            'macbook m2'
+            'ipad air',
+            'ipad air m1',
+            'ipad air m2'
         ],
-        resale: 700,
-        maxBuy: 500,
-        type: 'MACBOOK'
+        resale: 500,
+        maxBuy: 380,
+        type: 'IPAD AIR'
     },
 
-    // STEAM DECK
-    steamdeck: {
+    ipadpro: {
         keywords: [
-            'steam deck',
-            'steamdeck',
-            'deck 256',
-            'deck 512',
+            'ipad pro',
+            'ipad pro m1',
+            'ipad pro m2'
+        ],
+        resale: 850,
+        maxBuy: 650,
+        type: 'IPAD PRO'
+    },
+
+    // =========================
+    // MACBOOKS
+    // =========================
+
+    macbookair: {
+        keywords: [
+            'macbook air',
+            'm1 macbook air',
+            'm2 macbook air'
+        ],
+        resale: 850,
+        maxBuy: 650,
+        type: 'MACBOOK AIR'
+    },
+
+    macbookpro: {
+        keywords: [
+            'macbook pro',
+            'm1 macbook pro',
+            'm2 macbook pro'
+        ],
+        resale: 1400,
+        maxBuy: 1100,
+        type: 'MACBOOK PRO'
+    },
+
+    // =========================
+    // STEAM DECK
+    // =========================
+
+    steamdecklcd: {
+        keywords: [
+            'steam deck 256',
+            'steam deck 512'
+        ],
+        resale: 380,
+        maxBuy: 280,
+        type: 'STEAM DECK LCD'
+    },
+
+    steamdeckoled: {
+        keywords: [
             'steam deck oled'
         ],
-        resale: 350,
-        maxBuy: 260,
-        type: 'STEAM DECK'
+        resale: 550,
+        maxBuy: 430,
+        type: 'STEAM DECK OLED'
     },
 
+    // =========================
     // SAMSUNG
-    samsung: {
+    // =========================
+
+    galaxys23: {
         keywords: [
-            's23',
-            's23 ultra',
-            's22',
-            's22 ultra',
             'galaxy s23',
-            'galaxy s22',
-            'samsung s23',
-            'samsung s22',
-            'galaxy',
-            'samsung galaxy',
-            'galaxy ultra'
+            's23'
         ],
-        resale: 400,
-        maxBuy: 280,
-        type: 'SAMSUNG'
+        resale: 500,
+        maxBuy: 380,
+        type: 'S23'
+    },
+
+    galaxys23ultra: {
+        keywords: [
+            'galaxy s23 ultra',
+            's23 ultra'
+        ],
+        resale: 750,
+        maxBuy: 600,
+        type: 'S23 ULTRA'
+    },
+
+    galaxys24: {
+        keywords: [
+            'galaxy s24',
+            's24'
+        ],
+        resale: 650,
+        maxBuy: 500,
+        type: 'S24'
+    },
+
+    galaxys24ultra: {
+        keywords: [
+            'galaxy s24 ultra',
+            's24 ultra'
+        ],
+        resale: 950,
+        maxBuy: 780,
+        type: 'S24 ULTRA'
     }
 };
 function detectProduct(title) {
@@ -564,7 +677,6 @@ const allowedWords = [
     'ps5 disc',
 
     // SWITCH
-    'switch',
     'switch oled',
     'switch lite',
     'nintendo switch',
@@ -577,12 +689,12 @@ const allowedWords = [
     'iphone 15',
 
     // IPAD
-    'ipad',
-    'ipad pro',
+    'ipad 9',
+    'ipad 10',
     'ipad air',
+    'ipad pro',
 
     // MACBOOK
-    'macbook',
     'macbook air',
     'macbook pro',
 
