@@ -696,8 +696,9 @@ await channel.send({
     embeds: [embed]
 });
 
-} 
 } // sluit for (const item of items)
+
+} // sluit for (const term of searchTerms)
 
 firstRun = false;
 
