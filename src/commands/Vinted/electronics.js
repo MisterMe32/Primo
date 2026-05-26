@@ -189,19 +189,68 @@ function detectProduct(title) {
 
     title = title.toLowerCase();
 
+    let bestMatch = null;
+
+    let bestScore = 0;
+
     for (const product of Object.values(products)) {
 
         for (const keyword of product.keywords) {
 
+            // EXACT MATCH
             if (title.includes(keyword)) {
+
                 return product;
+            }
+
+            // WOORDEN SPLITSEN
+            const titleWords =
+                title.split(' ');
+
+            const keywordWords =
+                keyword.split(' ');
+
+            let matches = 0;
+
+            for (const word of keywordWords) {
+
+                if (
+                    titleWords.some(t =>
+                        t.includes(word) ||
+                        word.includes(t)
+                    )
+                ) {
+                    matches++;
+                }
+            }
+
+            const score =
+                matches /
+                keywordWords.length;
+
+            if (score > bestScore) {
+
+                bestScore = score;
+
+                bestMatch = product;
             }
         }
     }
 
+    // FUZZY MATCH THRESHOLD
+    if (bestScore >= 0.6) {
+
+        console.log(
+            'FUZZY MATCH:',
+            bestMatch.type,
+            bestScore
+        );
+
+        return bestMatch;
+    }
+
     return null;
 }
-
 async function analyzeDealAI({ title, price }) {
 
     try {
