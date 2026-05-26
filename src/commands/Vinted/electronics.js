@@ -16,6 +16,34 @@ const runningSearches = new Map();
 
 let firstRun = true;
 
+// GOEDKOPE LOKALE FILTER
+const blockedWords = [
+
+    'hoesje',
+    'case',
+    'cover',
+    'charger',
+    'oplader',
+    'dock',
+    'dock only',
+    'joycon',
+    'joycon only',
+    'controller',
+    'controller only',
+    'screenprotector',
+    'screen protector',
+    'replacement',
+    'onderdelen',
+    'for parts',
+    'defect',
+    'kapot',
+    'repair',
+    'empty box',
+    'doos only',
+    'account only',
+    'tablet only'
+];
+
 async function analyzeDealAI({ title, price }) {
 
     try {
@@ -38,20 +66,6 @@ Geef ALLEEN geldige JSON terug:
   "risk": "low" | "medium" | "high",
   "summary": string
 }
-
-BLOCK direct:
-- hoesjes
-- chargers
-- docks
-- controllers
-- joycons
-- empty box
-- defect
-- for parts
-- account only
-- doos only
-- tablet only
-- replacement parts
 
 Alleen COMPLETE werkende apparaten toestaan.
 
@@ -262,12 +276,14 @@ export default {
                             const title =
                                 item.title.toLowerCase();
 
+                            // DUBBELE ITEMS SKIP
                             if (
                                 seenItems.has(item.link)
                             ) {
                                 continue;
                             }
 
+                            // EERSTE RUN SKIP
                             if (firstRun) {
 
                                 seenItems.add(item.link);
@@ -277,6 +293,22 @@ export default {
 
                             seenItems.add(item.link);
 
+                            // GOEDKOPE KEYWORD FILTER
+                            if (
+                                blockedWords.some(word =>
+                                    title.includes(word)
+                                )
+                            ) {
+
+                                console.log(
+                                    "BLOCKED LOCAL:",
+                                    title
+                                );
+
+                                continue;
+                            }
+
+                            // PRIJS PARSEN
                             const price =
                                 Number(
 
@@ -285,6 +317,7 @@ export default {
                                         .replace(',', '.')
                                 );
 
+                            // ONGELDIGE PRIJS
                             if (
                                 !price ||
                                 isNaN(price)
@@ -292,7 +325,18 @@ export default {
                                 continue;
                             }
 
+                            // BOVEN USER MAXPRIJS
                             if (price > maxprijs) {
+                                continue;
+                            }
+
+                            // TE GOEDKOOP = MEESTAL TROEP
+                            if (price < 40) {
+
+                                console.log(
+                                    "PRICE TOO LOW"
+                                );
+
                                 continue;
                             }
 
@@ -300,6 +344,7 @@ export default {
                                 "START AI ANALYZE"
                             );
 
+                            // PAS NU AI
                             const ai =
                                 await analyzeDealAI({
 
@@ -362,6 +407,7 @@ export default {
                             const profit =
                                 estimatedValue - price;
 
+                            // MINIMALE WINST
                             if (profit < 20) {
                                 continue;
                             }
