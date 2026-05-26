@@ -573,7 +573,7 @@ const price = Number(
                             continue;
                         }
 
-                      if (price > maxprijs) {
+                      if (price > product.maxBuy) {
    console.log("PRICE TOO HIGH:", title, price);
    continue;
 }
