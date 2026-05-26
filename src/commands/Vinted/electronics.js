@@ -238,20 +238,41 @@ function detectProduct(title) {
 async function aiCheck(title) {
 
    const prompt = `
-   Titel: ${title}
+Titel: ${title}
 
-   Is dit:
-   - alleen een accessoire
-   OF
-   - een volledige console/bundel?
+Bepaal of dit een COMPLETE console, telefoon,
+laptop of handheld is die direct doorverkocht kan worden.
 
-   Antwoord ALLEEN met:
+BLOCK als het gaat om:
+- accessoires
+- hoesjes
+- chargers
+- docks
+- joycons
+- controllers
+- onderdelen
+- defecte apparaten
+- schermen
+- cases
+- account only
+- doos only
+- tablet only
+- empty box
+- replacement parts
 
-   ACCESSORY_ONLY
-   of
-   FULL_PRODUCT
-   `;
+Alleen COMPLETE werkende apparaten mogen:
 
+FULL_PRODUCT
+
+Alles anders:
+
+ACCESSORY_ONLY
+
+Antwoord ALLEEN met:
+FULL_PRODUCT
+of
+ACCESSORY_ONLY
+`;
    try {
 
       const response =
