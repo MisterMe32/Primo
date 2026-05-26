@@ -526,7 +526,12 @@ await page.waitForTimeout(
                             items.length
                         );
 
-                        for (const item of items) {
+for (const item of items) {
+
+    console.log(
+        "CHECKING ITEM:",
+        item.title
+    );
 
                             const title =
                                 item.title.toLowerCase();
@@ -604,10 +609,21 @@ const product =
                                 continue;
                             }
 
-                            if (price > maxprijs) {
-                                continue;
-                            }
+                           if (price > maxprijs) {
 
+    console.log(
+        "SKIPPED MAX PRICE:",
+        price
+    );
+
+    continue;
+}
+console.log(
+    "MAXBUY:",
+    product.maxBuy,
+    "PRICE:",
+    price
+);
                             if (
                                 price >
                                 product.maxBuy + 40
@@ -673,11 +689,14 @@ if (!ai) {
                                 "AI RESULT:",
                                 ai
                             );
+if (!ai) {
 
-                            if (!ai) {
-                                continue;
-                            }
+    console.log(
+        "AI FAILED"
+    );
 
+    continue;
+}
                             if (ai.isAccessory) {
 
                                 console.log(
@@ -711,6 +730,11 @@ if (!ai) {
 
                             const profit =
                                 estimatedValue - price;
+                              
+                                console.log(
+    "PROFIT:",
+    profit
+);
 
                             if (profit < 20) {
                                 continue;
@@ -841,6 +865,9 @@ if (
 recentlySent.set(
     item.link,
     now
+);
+console.log(
+    "DISCORD ALERT SENT"
 );
 
 await channel.send({
