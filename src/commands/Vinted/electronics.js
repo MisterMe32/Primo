@@ -610,7 +610,7 @@ const product =
 
                             if (
                                 price >
-                                product.maxBuy
+                                product.maxBuy + 40
                             ) {
 
                                 console.log(
@@ -625,7 +625,7 @@ const baseEstimatedValue =
 const rawProfit =
     baseEstimatedValue - price;
 
-if (rawProfit < 40) {
+if (rawProfit < 20) {
 
     console.log(
         "RAW PROFIT TOO LOW"
