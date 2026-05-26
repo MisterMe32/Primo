@@ -83,16 +83,35 @@ console.log("Aantal items gevonden:", items.length);
         const title = item.title.toLowerCase();
 
 const blockedWords = [
-  'hoes',
-  'case',
-  'repair',
-  'broken',
-  'defect',
-  'onderdeel',
-  'cover',
-  'ps5',
-  'playstation',
-  'hd camera'
+
+    // alleen accessoire listings
+    'case only',
+    'cover only',
+    'charger only',
+    'oplader only',
+    'dock only',
+    'joycon only',
+    'controller only',
+    'tablet only',
+
+    // defect
+    'kapot',
+    'defect',
+    'werkt niet',
+    'repair',
+    'onderdelen',
+    'for parts',
+
+    // fake / scam
+    'empty box',
+    'doos only',
+    'icloud locked',
+    'account only',
+
+    // irrelevante dingen
+    'gezocht',
+    'huur',
+    'verhuur'
 ];
 
 if (blockedWords.some(word => text.includes(word))) {
@@ -227,12 +246,18 @@ let matchType = '🎮 Broad Nintendo Match';
 if (matchedDeal) {
   matchType = `🎯 Exact ${matchedDeal[0].toUpperCase()} Match`;
 }
-    let dealRating = '🟢 GOEDE DEAL';
+   let dealRating =
+    '🟢 GOEDE DEAL';
 
-if (profit >= 100) {
-    dealRating = '🔥 INSANE DEAL';
-} else if (profit >= 50) {
-    dealRating = '🟡 HEEL GOEDE DEAL';
+if (profit >= 140) {
+
+    dealRating =
+        '🔥 INSANE DEAL';
+
+} else if (profit >= 90) {
+
+    dealRating =
+        '🟡 HEEL GOEDE DEAL';
 }
 if (profit < 25) {
   continue;

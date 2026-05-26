@@ -13,7 +13,8 @@ const openai = new OpenAI({
 const seenItems = new Set();
 const activeSearches = new Set();
 const runningSearches = new Map();
-
+const recentlySent = new Map();
+const aiCache = new Map();
 let firstRun = true;
 
 // PRODUCT DATABASE
@@ -374,6 +375,8 @@ export default {
         const page =
             await browser.newPage();
 
+            page.setDefaultTimeout(30000);
+
         if (!global.activeIntervals) {
 
             global.activeIntervals =
@@ -405,14 +408,44 @@ export default {
 
                     const searchTerms = [
 
-                        'ps5',
-                        'nintendo switch',
-                        'iphone',
-                        'steam deck',
-                        'macbook',
-                        'ipad',
-                        'samsung'
-                    ];
+    // PLAYSTATION
+    'ps5',
+    'playstation 5',
+    'playstation5',
+    'ps 5',
+
+    // SWITCH
+    'nintendo switch',
+    'switch oled',
+    'switch lite',
+
+    // IPHONE
+    'iphone',
+    'iphone 11',
+    'iphone 12',
+    'iphone 13',
+    'iphone 14',
+
+    // IPAD
+    'ipad',
+    'ipad air',
+    'ipad pro',
+
+    // SAMSUNG
+    'samsung',
+    's23',
+    's24',
+    'galaxy',
+
+    // STEAM DECK
+    'steam deck',
+    'steamdeck',
+
+    // MACBOOK
+    'macbook',
+    'macbook air',
+    'macbook pro'
+];
 
                     for (const term of searchTerms) {
 
@@ -433,9 +466,14 @@ export default {
                             timeout: 60000
                         });
 
-                        await page.waitForTimeout(
-                            3000
-                        );
+                      const randomDelay =
+    Math.floor(
+        Math.random() * 2500
+    ) + 2000;
+
+await page.waitForTimeout(
+    randomDelay
+);
 
                         const items =
                             await page.$$eval(
@@ -506,10 +544,41 @@ export default {
                                 continue;
                             }
 
-                            seenItems.add(item.link);
+                           seenItems.add(item.link);
 
-                            const product =
-                                detectProduct(title);
+// SUPER HARD BLOCKS
+const hardBlocked = [
+
+    'controller only',
+    'dock only',
+    'case only',
+    'cover only',
+    'charger only',
+    'empty box',
+    'replacement parts',
+    'for parts',
+    'icloud locked',
+    'account only',
+    'tablet only',
+    'doos only'
+];
+
+if (
+    hardBlocked.some(word =>
+        title.includes(word)
+    )
+) {
+
+    console.log(
+        "HARD BLOCKED:",
+        title
+    );
+
+    continue;
+}
+
+const product =
+    detectProduct(title);
 
                             if (!product) {
 
@@ -550,17 +619,55 @@ export default {
 
                                 continue;
                             }
+const baseEstimatedValue =
+    product.resale;
 
+const rawProfit =
+    baseEstimatedValue - price;
+
+if (rawProfit < 40) {
+
+    console.log(
+        "RAW PROFIT TOO LOW"
+    );
+
+    continue;
+}
                             console.log(
                                 "START AI ANALYZE"
                             );
 
-                            const ai =
-                                await analyzeDealAI({
+                           const cacheKey =
+    `${title}-${price}`;
 
-                                    title: item.title,
-                                    price
-                                });
+let ai =
+    aiCache.get(cacheKey);
+
+if (!ai) {
+
+    ai = await Promise.race([
+
+        analyzeDealAI({
+            title: item.title,
+            price
+        }),
+
+        new Promise(resolve =>
+            setTimeout(
+                () => resolve(null),
+                10000
+            )
+        )
+    ]);
+
+    if (ai) {
+
+        aiCache.set(
+            cacheKey,
+            ai
+        );
+    }
+}
 
                             console.log(
                                 "AI RESULT:",
@@ -589,8 +696,8 @@ export default {
                                 continue;
                             }
 
-                            let estimatedValue =
-                                product.resale;
+                           let estimatedValue =
+    baseEstimatedValue;
 
                             let aiScore =
                                 ai.flipScore || 70;
@@ -699,13 +806,50 @@ export default {
                             const channel =
                                 interaction.channel;
 
-                            await channel.send({
+                           const now = Date.now();
 
-                                content:
+const lastSent =
+   recentlySent.get(item.link);
+if (recentlySent.size > 5000) {
+
+    const oldestKey =
+        recentlySent.keys().next().value;
+
+    recentlySent.delete(oldestKey);
+}
+
+if (seenItems.size > 10000) {
+
+    const oldestSeen =
+        seenItems.values().next().value;
+
+    seenItems.delete(oldestSeen);
+}
+if (
+    lastSent &&
+    now - lastSent < 3600000
+) {
+
+    console.log(
+        "RECENTLY SENT:",
+        item.title
+    );
+
+    continue;
+}
+
+recentlySent.set(
+    item.link,
+    now
+);
+
+await channel.send({
+
+    content:
 `🚨 AI VINTED DEAL <@638981298555322368>`,
 
-                                embeds: [embed]
-                            });
+    embeds: [embed]
+});
                         }
                     }
 
