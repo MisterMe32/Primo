@@ -2,6 +2,7 @@ import {
     SlashCommandBuilder,
     EmbedBuilder
 } from 'discord.js';
+
 import { chromium } from 'playwright';
 import OpenAI from 'openai';
 
@@ -12,339 +13,49 @@ const openai = new OpenAI({
 const seenItems = new Set();
 const activeSearches = new Set();
 const runningSearches = new Map();
+
 let firstRun = true;
 
-const blockedWords = [
-
-    // accessoires
-    'hoesje',
-    'case',
-    'cover',
-    'charger',
-    'oplader',
-    'dock only',
-    'joycon only',
-    'controller only',
-    'alleen controller',
-    'tablet only',
-
-    // defect
-    'kapot',
-    'defect',
-    'werkt niet',
-    'repair',
-    'onderdelen',
-    'for parts',
-
-    // fake / scam
-    'empty box',
-    'doos only',
-    'icloud locked',
-    'account only',
-
-    // irrelevante dingen
-    'gezocht',
-    'huur',
-    'verhuur'
-];
-// AGRESSIEVE FLIP PRIJZEN
-const products = {
-
-    // SWITCH
-    switchLite: {
-      keywords: [
-    'switch lite',
-    'lite switch',
-    'nintendo lite'
-],
-        resale: 120,
-        maxBuy: 65,
-        type: 'SWITCH LITE'
-    },
-
-    switchOLED: {
-        keywords: [
-    'switch oled',
-    'oled switch',
-    'nintendo oled'
-],
-        resale: 250,
-        maxBuy: 220,
-        type: 'SWITCH OLED'
-    },
-
-    switchNormal: {
-    keywords: [
-        'switch',
-        'nintendo switch',
-        'switch console',
-        'switch v1',
-        'switch v2'
-    ],
-        resale: 150,
-        maxBuy: 130,
-        type: 'SWITCH'
-    },
-
-    // PS5
-    ps5Digital: {
-       keywords: [
-    'ps5 digital',
-    'playstation 5 digital',
-    'digital edition'
-],
-        resale: 300,
-        maxBuy: 220,
-        type: 'PS5 DIGITAL'
-    },
-
-    ps5Slim: {
-       keywords: [
-    'ps5 slim',
-    'playstation 5 slim'
-],
-        resale: 390,
-        maxBuy: 320,
-        type: 'PS5 SLIM'
-    },
-
-    ps5Standard: {
-        keywords: [
-    'ps5',
-    'playstation 5',
-    'playstation5',
-    'ps 5',
-    'sony ps5'
-],
-        resale: 340,
-        maxBuy: 330,
-        type: 'PS5'
-    },
-
-    // IPHONES
-    iphone11: {
-       keywords: [
-    'iphone 11',
-    '11 pro',
-    '11 pro max'
-],
-        resale: 220,
-        maxBuy: 140,
-        type: 'IPHONE 11'
-    },
-
-    iphone12: {
-       keywords: [
-    'iphone 12',
-    '12 pro',
-    '12 pro max'
-],
-        resale: 280,
-        maxBuy: 190,
-        type: 'IPHONE 12'
-    },
-
-    iphone13: {
-       keywords: [
-    'iphone 13',
-    '13 pro',
-    '13 pro max'
-],
-        resale: 420,
-        maxBuy: 380,
-        type: 'IPHONE 13'
-    },
-
-    // SAMSUNG
-    samsungA54: {
-       keywords: [
-    'a54',
-    'samsung a54',
-    'galaxy a54'
-],
-        resale: 220,
-        maxBuy: 140,
-        type: 'SAMSUNG A54'
-    },
-
-    samsungS23: {
-      keywords: [
-    's23',
-    's23 ultra',
-    'galaxy s23',
-    'samsung s23'
-],
-        resale: 420,
-        maxBuy: 280,
-        type: 'S23'
-    },
-
-    // STEAM DECK
-    steamDeck: {
-       keywords: [
-    'steam deck',
-    'steamdeck',
-    'deck 256',
-    'deck 512'
-],
-        resale: 350,
-        maxBuy: 300,
-        type: 'STEAM DECK'
-    },
-
-    // MACBOOKS
-    macbookAir: {
-       keywords: [
-    'macbook air',
-    'mac air',
-    'm1 air',
-    'm2 air'
-],
-        resale: 500,
-        maxBuy: 450,
-        type: 'MACBOOK AIR'
-    },
-
-    macbookPro: {
-       keywords: [
-    'macbook pro',
-    'mac pro',
-    'm1 pro',
-    'm2 pro'
-],
-        resale: 750,
-        maxBuy: 650,
-        type: 'MACBOOK PRO'
-    }
-};
-
-function detectProduct(title) {
-
-    title = title.toLowerCase();
-
-    for (const product of Object.values(products)) {
-
-        for (const keyword of product.keywords) {
-
-            if (title.includes(keyword)) {
-                return product;
-            }
-        }
-    }
-
-    return null;
-}
-
-async function aiCheck(title) {
-
-   const prompt = `
-Titel: ${title}
-
-Bepaal of dit een COMPLETE console, telefoon,
-laptop of handheld is die direct doorverkocht kan worden.
-
-BLOCK als het gaat om:
-- accessoires
-- hoesjes
-- chargers
-- docks
-- joycons
-- controllers
-- onderdelen
-- defecte apparaten
-- schermen
-- cases
-- account only
-- doos only
-- tablet only
-- empty box
-- replacement parts
-
-Alleen COMPLETE werkende apparaten mogen:
-
-FULL_PRODUCT
-
-Alles anders:
-
-ACCESSORY_ONLY
-
-Antwoord ALLEEN met:
-FULL_PRODUCT
-of
-ACCESSORY_ONLY
-`;
-   try {
-
-      const response =
-         await openai.chat.completions.create({
-
-         model: "gpt-4o-mini",
-
-         messages: [
-            {
-               role: "user",
-               content: prompt
-            }
-         ],
-
-         max_tokens: 10
-      });
-
-      return response
-         .choices[0]
-         .message.content
-         .trim();
-
-   } catch (err) {
-
-      console.log("AI ERROR:", err);
-
-      return "ACCESSORY_ONLY";
-   }
-}
-
-async function analyzeDealAI({
-
-    title,
-    price,
-    productType
-
-}) {
+async function analyzeDealAI({ title, price }) {
 
     try {
 
         const prompt = `
+Titel: ${title}
+Prijs: €${price}
 
-Je bent een professionele reseller / flip expert.
+Analyseer deze Vinted listing als professionele reseller.
 
-Analyseer deze Vinted listing.
-
-Titel:
-${title}
-
-Prijs:
-€${price}
-
-Product:
-${productType}
-
-Geef ALLEEN JSON terug.
-
-Format:
+Geef ALLEEN geldige JSON terug:
 
 {
-  "score": number,
+  "isAccessory": boolean,
+  "isScam": boolean,
+  "productType": string,
   "estimatedResale": number,
-  "suggestedOffer": number,
+  "maxBuyPrice": number,
+  "flipScore": number,
   "risk": "low" | "medium" | "high",
-  "summary": "korte uitleg"
+  "summary": string
 }
 
-Belangrijk:
-- Denk als agressieve reseller
-- Gebruik snelle doorverkoopprijzen
-- Wees conservatief
-- Hoge score alleen bij echte goede flips
+BLOCK direct:
+- hoesjes
+- chargers
+- docks
+- controllers
+- joycons
+- empty box
+- defect
+- for parts
+- account only
+- doos only
+- tablet only
+- replacement parts
+
+Alleen COMPLETE werkende apparaten toestaan.
+
+Gebruik realistische resale prijzen.
 `;
 
         const completion =
@@ -353,7 +64,6 @@ Belangrijk:
                 model: 'gpt-4o-mini',
 
                 messages: [
-
                     {
                         role: 'user',
                         content: prompt
@@ -371,10 +81,7 @@ Belangrijk:
 
     } catch (err) {
 
-        console.log(
-            'AI ERROR:',
-            err
-        );
+        console.log("AI ERROR:", err);
 
         return null;
     }
@@ -420,313 +127,364 @@ export default {
             `🔎 AI Electronics scanner gestart onder €${maxprijs}`
         );
 
-       
-const browser = await chromium.launch({
-    executablePath: '/usr/bin/chromium-browser',
-    headless: true,
-    args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox'
-    ]
-});
+        const browser =
+            await chromium.launch({
+
+                executablePath:
+                    '/usr/bin/chromium-browser',
+
+                headless: true,
+
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox'
+                ]
+            });
+
         const page =
             await browser.newPage();
 
-            if (!global.activeIntervals) {
-    global.activeIntervals = new Map();
-}
-      const interval = setInterval(async () => {
+        if (!global.activeIntervals) {
 
+            global.activeIntervals =
+                new Map();
+        }
 
-    console.log("INTERVAL RUNNING:", searchKey);
+        const interval =
+            setInterval(async () => {
 
-    if (runningSearches.get(searchKey)) {
+                console.log(
+                    "INTERVAL RUNNING:",
+                    searchKey
+                );
 
-        return;
+                if (
+                    runningSearches.get(
+                        searchKey
+                    )
+                ) {
+                    return;
+                }
 
-    }
+                runningSearches.set(
+                    searchKey,
+                    true
+                );
 
-    runningSearches.set(searchKey, true);
+                try {
 
-    try {
+                    const searchTerms = [
 
-                const searchTerms = [
+                        'ps5',
+                        'nintendo switch',
+                        'iphone',
+                        'steam deck',
+                        'macbook',
+                        'samsung'
+                    ];
 
-                    'ps5',
-                    'nintendo switch',
-                    'iphone',
-                    'steam deck',
-                    'macbook',
-                    'samsung'
-                ];
+                    for (const term of searchTerms) {
 
-                for (const term of searchTerms) {
-
-                    const url =
+                        const url =
 `https://www.vinted.nl/catalog?search_text=${encodeURIComponent(term)}&order=newest_first`;
 
-await page.setExtraHTTPHeaders({
-   'Accept-Language': 'en-US,en;q=0.9'
-});
-                    await page.goto(url, {
+                        await page.setExtraHTTPHeaders({
 
-                        waitUntil:
-                            'domcontentloaded',
+                            'Accept-Language':
+                                'en-US,en;q=0.9'
+                        });
 
-                        timeout: 60000
-                    });
+                        await page.goto(url, {
 
-                    await page.waitForTimeout(3000);
+                            waitUntil:
+                                'domcontentloaded',
 
-                    const items =
-                        await page.$$eval(
+                            timeout: 60000
+                        });
 
-                            '[data-testid="grid-item"]',
-
-                            cards => {
-
-                                return cards.map(card => {
-
-                               const title =
-    card.querySelector('img')?.alt ||
-    card.querySelector('[data-testid="item-box-title"]')?.innerText ||
-    '';
-                                  const price = 
-                                  card.querySelector('[data-testid="item-box-price"]')
-?.innerText || '';
-
-                                    const link =
-    card.querySelector("a")?.href || "";
-
-
-                                    const image =
-card.querySelector('img')
-?.src || '';
-
-                                    return {
-
-                                        title,
-                                        price,
-                                        link,
-                                        image
-                                    };
-                                });
-                            }
+                        await page.waitForTimeout(
+                            3000
                         );
 
-                    console.log(
-                        `${term}:`,
-                        items.length
-                    );
+                        const items =
+                            await page.$$eval(
 
-                    for (const item of items) {
-                        
-                        const title =
-                            item.title.toLowerCase();
-if (seenItems.has(item.link)) {
-    continue;
-}
+                                '[data-testid="grid-item"]',
 
-// eerste scan skippen
-if (firstRun) {
-    seenItems.add(item.link);
-    continue;
-}
+                                cards => {
 
-seenItems.add(item.link);
-                        // blocked words
-                 const aiResult =
-    await aiCheck(title);
+                                    return cards.map(card => {
 
-console.log("AI RESULT:", aiResult);
+                                        const title =
+                                            card.querySelector('img')?.alt ||
 
-if (
-    aiResult ===
-    "ACCESSORY_ONLY"
-) {
+                                            card.querySelector(
+                                                '[data-testid="item-box-title"]'
+                                            )?.innerText ||
 
-    console.log(
-        "BLOCKED ACCESSORY"
-    );
+                                            '';
 
-    continue;
-}
+                                        const price =
+                                            card.querySelector(
+                                                '[data-testid="item-box-price"]'
+                                            )?.innerText ||
 
-console.log("AI APPROVED");
+                                            '';
 
-console.log("START DETECT PRODUCT");
+                                        const link =
+                                            card.querySelector('a')?.href ||
 
-const product = detectProduct(title);
+                                            '';
 
-console.log("PRODUCT RESULT:", product);
+                                        const image =
+                                            card.querySelector('img')?.src ||
 
-if (!product) {
+                                            '';
 
-    console.log("PRODUCT NOT FOUND");
+                                        return {
 
-    continue;
-}
+                                            title,
+                                            price,
+                                            link,
+                                            image
+                                        };
+                                    });
+                                }
+                            );
 
-console.log("PASSED PRODUCT");
+                        console.log(
+                            `${term}:`,
+                            items.length
+                        );
 
-// prijs
-const price = Number(
-    item.price
-        .replace(/[^\d,]/g, '')
-        .replace(',', '.')
-);
+                        for (const item of items) {
 
-                        if (
-                            !price ||
-                            isNaN(price)
-                        ) {
-                            continue;
-                        }
+                            const title =
+                                item.title.toLowerCase();
 
-                      if (price > product.maxBuy) {
-   console.log("PRICE TOO HIGH:", title, price);
-   continue;
-}
+                            if (
+                                seenItems.has(item.link)
+                            ) {
+                                continue;
+                            }
 
-                        if (
-                            price > product.maxBuy
-                        ) {
-                            continue;
-                        }
+                            if (firstRun) {
 
-                       
+                                seenItems.add(item.link);
 
-                       
+                                continue;
+                            }
 
-                        // AI ANALYSE
-                        let estimatedValue =
-                            product.resale;
+                            seenItems.add(item.link);
 
-                        let suggestedOffer =
-                            Math.floor(price * 0.85);
+                            const price =
+                                Number(
 
-                        let aiScore = 70;
+                                    item.price
+                                        .replace(/[^\d,]/g, '')
+                                        .replace(',', '.')
+                                );
 
-                        let aiRisk = 'medium';
+                            if (
+                                !price ||
+                                isNaN(price)
+                            ) {
+                                continue;
+                            }
 
-                        let aiSummary =
-                            'Standaard analyse';
+                            if (price > maxprijs) {
+                                continue;
+                            }
 
-                        const ai =
-                            await analyzeDealAI({
+                            console.log(
+                                "START AI ANALYZE"
+                            );
 
-                                title: item.title,
-                                price,
-                                productType:
-                                    product.type
-                            });
+                            const ai =
+                                await analyzeDealAI({
 
-                        if (ai) {
+                                    title: item.title,
+                                    price
+                                });
 
-                            estimatedValue =
-                                ai.estimatedResale
-                                || estimatedValue;
+                            console.log(
+                                "AI RESULT:",
+                                ai
+                            );
 
-                            suggestedOffer =
-                                ai.suggestedOffer
-                                || suggestedOffer;
+                            if (!ai) {
+                                continue;
+                            }
 
-                            aiScore =
-                                ai.score
-                                || aiScore;
+                            if (ai.isAccessory) {
 
-                            aiRisk =
-                                ai.risk
-                                || aiRisk;
+                                console.log(
+                                    "BLOCKED ACCESSORY"
+                                );
 
-                            aiSummary =
-                                ai.summary
-                                || aiSummary;
-                        }
+                                continue;
+                            }
 
-                        const profit =
-                            estimatedValue - price;
+                            if (ai.isScam) {
 
-                        // alleen goede flips
-                        if (profit < 20) {
-                            continue;
-                             }
-                        
-console.log("REACHED EMBED");
+                                console.log(
+                                    "BLOCKED SCAM"
+                                );
 
-const embed = new EmbedBuilder();
+                                continue;
+                            }
 
-console.log("EMBED CREATED");
-   embed
-    .setTitle(`🔥 ${product.type}`)
-    .setURL(item.link)
-    .setColor(0x00AE86)
-    .addFields(
-        {
-            name: '💰 Prijs',
-            value: `€${price}`,
-            inline: true
-        },
-        {
-            name: '📈 Winst',
-            value: `€${profit}`,
-            inline: true
-        },
-        {
-            name: '🤖 AI Score',
-            value: `${aiScore}/100`,
-            inline: true
-        }
-    )
-    .setFooter({
-        text: 'Primo AI Electronics'
-    })
-    .setTimestamp();
+                            if (
+                                price >
+                                ai.maxBuyPrice
+                            ) {
 
-if (item.image) {
+                                console.log(
+                                    "PRICE TOO HIGH"
+                                );
 
-                         embed.setThumbnail(item.image);
+                                continue;
+                            }
 
-                        }
+                            let estimatedValue =
+                                ai.estimatedResale;
 
+                            let aiScore =
+                                ai.flipScore || 70;
 
-console.log(item.title, item.price);
-console.log("SENDING ITEM");
-console.log("ABOUT TO SEND");
+                            let aiRisk =
+                                ai.risk || 'medium';
 
-const channel = interaction.channel;
+                            let aiSummary =
+                                ai.summary ||
+                                'AI analyse';
 
-console.log(channel);
+                            const profit =
+                                estimatedValue - price;
 
-await channel.send({
+                            if (profit < 20) {
+                                continue;
+                            }
 
-    content:
+                            console.log(
+                                "REACHED EMBED"
+                            );
+
+                            const embed =
+                                new EmbedBuilder()
+
+                                    .setTitle(
+                                        `🔥 ${ai.productType}`
+                                    )
+
+                                    .setURL(item.link)
+
+                                    .setColor(
+                                        0x00AE86
+                                    )
+
+                                    .addFields(
+
+                                        {
+                                            name:
+                                                '💰 Prijs',
+
+                                            value:
+                                                `€${price}`,
+
+                                            inline: true
+                                        },
+
+                                        {
+                                            name:
+                                                '📈 Winst',
+
+                                            value:
+                                                `€${profit}`,
+
+                                            inline: true
+                                        },
+
+                                        {
+                                            name:
+                                                '🤖 AI Score',
+
+                                            value:
+                                                `${aiScore}/100`,
+
+                                            inline: true
+                                        },
+
+                                        {
+                                            name:
+                                                '⚠️ Risk',
+
+                                            value:
+                                                aiRisk,
+
+                                            inline: true
+                                        },
+
+                                        {
+                                            name:
+                                                '🧠 Analyse',
+
+                                            value:
+                                                aiSummary
+                                        }
+                                    )
+
+                                    .setFooter({
+
+                                        text:
+                                            'Primo AI Electronics'
+                                    })
+
+                                    .setTimestamp();
+
+                            if (item.image) {
+
+                                embed.setThumbnail(
+                                    item.image
+                                );
+                            }
+
+                            console.log(
+                                "SENDING ITEM"
+                            );
+
+                            const channel =
+                                interaction.channel;
+
+                            await channel.send({
+
+                                content:
 `🚨 AI VINTED DEAL <@638981298555322368>`,
 
-    embeds: [embed]
-});
+                                embeds: [embed]
+                            });
+                        }
+                    }
 
-} // sluit for (const item of items)
+                    firstRun = false;
 
-} // sluit for (const term of searchTerms)
+                } catch (err) {
 
-firstRun = false;
+                    console.log(err);
 
-} catch (err) {
+                } finally {
 
-    console.log(err);
+                    runningSearches.set(
+                        searchKey,
+                        false
+                    );
+                }
 
-} finally {
+            }, 45000);
 
-    runningSearches.set(
-        searchKey,
-        false
-    );
- } 
-
-}, 45000);
-
-global.activeIntervals.set(searchKey, interval);
-
-}
+        global.activeIntervals.set(
+            searchKey,
+            interval
+        );
+    }
 };
