@@ -641,21 +641,9 @@ const price = Number(
                         // alleen goede flips
                         if (profit < 20) {
                             continue;
-                        
-
-                       let dealRating =
-    '🟢 GOEDE DEAL';
-
-if (profit >= 140) {
-
-    dealRating =
-        '🔥 INSANE DEAL';
-
-} else if (profit >= 90) {
-
-    dealRating =
-        '🟡 HEEL GOEDE DEAL';
-}
+                             }
+                             
+                        let dealRating = '🟢 GOEDE DEAL';
                         
 console.log("REACHED EMBED");
 
@@ -709,7 +697,6 @@ await channel.send({
                         });
                     }
                 }
-}
                
  firstRun = false;
             } catch (err) {
