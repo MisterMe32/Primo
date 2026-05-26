@@ -15,7 +15,7 @@ const activeSearches = new Set();
 const runningSearches = new Map();
 const recentlySent = new Map();
 const aiCache = new Map();
-let firstRun = true;
+let firstRun = false;
 
 // PRODUCT DATABASE
 const products = {
