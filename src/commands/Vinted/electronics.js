@@ -549,7 +549,9 @@ for (const item of items) {
                                 continue;
                             }
 
-                           seenItems.add(item.link);
+                          seenItems.add(item.link);
+
+console.log("NEW FILTER SYSTEM ACTIVE");
 // ALLEEN GOEDE PRODUCT TYPES TOESTAAN
 const allowedWords = [
 
