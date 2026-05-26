@@ -16,33 +16,191 @@ const runningSearches = new Map();
 
 let firstRun = true;
 
-// GOEDKOPE LOKALE FILTER
-const blockedWords = [
+// PRODUCT DATABASE
+const products = {
 
-    'hoesje',
-    'case',
-    'cover',
-    'charger',
-    'oplader',
-    'dock',
-    'dock only',
-    'joycon',
-    'joycon only',
-    'controller',
-    'controller only',
-    'screenprotector',
-    'screen protector',
-    'replacement',
-    'onderdelen',
-    'for parts',
-    'defect',
-    'kapot',
-    'repair',
-    'empty box',
-    'doos only',
-    'account only',
-    'tablet only'
-];
+    // PS5
+    ps5: {
+        keywords: [
+            'ps5',
+            'ps 5',
+            'playstation 5',
+            'playstation5',
+            'sony ps5',
+            'ps5 disc',
+            'ps5 digital',
+            'ps5 slim',
+            'ps5 console',
+            'playstation console'
+        ],
+        resale: 340,
+        maxBuy: 260,
+        type: 'PS5'
+    },
+
+    // NINTENDO SWITCH
+    switch: {
+        keywords: [
+            'switch',
+            'nintendo switch',
+            'switch oled',
+            'switch lite',
+            'oled switch',
+            'nintendo oled',
+            'lite switch',
+            'nintendo lite',
+            'switch console',
+            'switch v1',
+            'switch v2',
+            'switch bundle'
+        ],
+        resale: 180,
+        maxBuy: 120,
+        type: 'NINTENDO SWITCH'
+    },
+
+    // IPHONE 13
+    iphone13: {
+        keywords: [
+            'iphone 13',
+            '13 pro',
+            '13 pro max',
+            'iphone13',
+            'apple iphone 13',
+            '13pm',
+            '13pro',
+            'iphone 13 pro',
+            'iphone 13 pro max'
+        ],
+        resale: 420,
+        maxBuy: 320,
+        type: 'IPHONE 13'
+    },
+
+    // IPHONE 12
+    iphone12: {
+        keywords: [
+            'iphone 12',
+            '12 pro',
+            '12 pro max',
+            'iphone12',
+            'apple iphone 12',
+            '12pm',
+            '12pro',
+            'iphone 12 pro',
+            'iphone 12 pro max'
+        ],
+        resale: 300,
+        maxBuy: 220,
+        type: 'IPHONE 12'
+    },
+
+    // IPHONE 11
+    iphone11: {
+        keywords: [
+            'iphone 11',
+            '11 pro',
+            '11 pro max',
+            'iphone11',
+            'apple iphone 11',
+            '11pm',
+            '11pro',
+            'iphone 11 pro',
+            'iphone 11 pro max'
+        ],
+        resale: 220,
+        maxBuy: 150,
+        type: 'IPHONE 11'
+    },
+
+    // IPADS
+    ipad: {
+        keywords: [
+            'ipad',
+            'ipad air',
+            'ipad pro',
+            'ipad mini',
+            'ipad 9',
+            'ipad 10',
+            'ipad m1',
+            'ipad m2',
+            'apple ipad',
+            'ipad bundle'
+        ],
+        resale: 350,
+        maxBuy: 240,
+        type: 'IPAD'
+    },
+
+    // MACBOOKS
+    macbook: {
+        keywords: [
+            'macbook',
+            'macbook air',
+            'macbook pro',
+            'mac air',
+            'mac pro',
+            'm1 macbook',
+            'm2 macbook',
+            'apple macbook',
+            'macbook m1',
+            'macbook m2'
+        ],
+        resale: 700,
+        maxBuy: 500,
+        type: 'MACBOOK'
+    },
+
+    // STEAM DECK
+    steamdeck: {
+        keywords: [
+            'steam deck',
+            'steamdeck',
+            'deck 256',
+            'deck 512',
+            'steam deck oled'
+        ],
+        resale: 350,
+        maxBuy: 260,
+        type: 'STEAM DECK'
+    },
+
+    // SAMSUNG
+    samsung: {
+        keywords: [
+            's23',
+            's23 ultra',
+            's22',
+            's22 ultra',
+            'galaxy s23',
+            'galaxy s22',
+            'samsung s23',
+            'samsung s22',
+            'galaxy',
+            'samsung galaxy',
+            'galaxy ultra'
+        ],
+        resale: 400,
+        maxBuy: 280,
+        type: 'SAMSUNG'
+    }
+};
+function detectProduct(title) {
+
+    title = title.toLowerCase();
+
+    for (const product of Object.values(products)) {
+
+        for (const keyword of product.keywords) {
+
+            if (title.includes(keyword)) {
+                return product;
+            }
+        }
+    }
+
+    return null;
+}
 
 async function analyzeDealAI({ title, price }) {
 
@@ -59,17 +217,26 @@ Geef ALLEEN geldige JSON terug:
 {
   "isAccessory": boolean,
   "isScam": boolean,
-  "productType": string,
-  "estimatedResale": number,
-  "maxBuyPrice": number,
   "flipScore": number,
   "risk": "low" | "medium" | "high",
   "summary": string
 }
 
-Alleen COMPLETE werkende apparaten toestaan.
+BLOCK direct:
+- hoesjes
+- chargers
+- docks
+- controllers
+- joycons
+- empty box
+- defect
+- for parts
+- account only
+- doos only
+- tablet only
+- replacement parts
 
-Gebruik realistische resale prijzen.
+Alleen COMPLETE werkende apparaten toestaan.
 `;
 
         const completion =
@@ -194,6 +361,7 @@ export default {
                         'iphone',
                         'steam deck',
                         'macbook',
+                        'ipad',
                         'samsung'
                     ];
 
@@ -276,14 +444,12 @@ export default {
                             const title =
                                 item.title.toLowerCase();
 
-                            // DUBBELE ITEMS SKIP
                             if (
                                 seenItems.has(item.link)
                             ) {
                                 continue;
                             }
 
-                            // EERSTE RUN SKIP
                             if (firstRun) {
 
                                 seenItems.add(item.link);
@@ -293,22 +459,18 @@ export default {
 
                             seenItems.add(item.link);
 
-                            // GOEDKOPE KEYWORD FILTER
-                            if (
-                                blockedWords.some(word =>
-                                    title.includes(word)
-                                )
-                            ) {
+                            const product =
+                                detectProduct(title);
+
+                            if (!product) {
 
                                 console.log(
-                                    "BLOCKED LOCAL:",
-                                    title
+                                    "PRODUCT NOT FOUND"
                                 );
 
                                 continue;
                             }
 
-                            // PRIJS PARSEN
                             const price =
                                 Number(
 
@@ -317,7 +479,6 @@ export default {
                                         .replace(',', '.')
                                 );
 
-                            // ONGELDIGE PRIJS
                             if (
                                 !price ||
                                 isNaN(price)
@@ -325,16 +486,17 @@ export default {
                                 continue;
                             }
 
-                            // BOVEN USER MAXPRIJS
                             if (price > maxprijs) {
                                 continue;
                             }
 
-                            // TE GOEDKOOP = MEESTAL TROEP
-                            if (price < 40) {
+                            if (
+                                price >
+                                product.maxBuy
+                            ) {
 
                                 console.log(
-                                    "PRICE TOO LOW"
+                                    "PRICE TOO HIGH"
                                 );
 
                                 continue;
@@ -344,7 +506,6 @@ export default {
                                 "START AI ANALYZE"
                             );
 
-                            // PAS NU AI
                             const ai =
                                 await analyzeDealAI({
 
@@ -379,20 +540,8 @@ export default {
                                 continue;
                             }
 
-                            if (
-                                price >
-                                ai.maxBuyPrice
-                            ) {
-
-                                console.log(
-                                    "PRICE TOO HIGH"
-                                );
-
-                                continue;
-                            }
-
                             let estimatedValue =
-                                ai.estimatedResale;
+                                product.resale;
 
                             let aiScore =
                                 ai.flipScore || 70;
@@ -407,7 +556,6 @@ export default {
                             const profit =
                                 estimatedValue - price;
 
-                            // MINIMALE WINST
                             if (profit < 20) {
                                 continue;
                             }
@@ -420,7 +568,7 @@ export default {
                                 new EmbedBuilder()
 
                                     .setTitle(
-                                        `🔥 ${ai.productType}`
+                                        `🔥 ${product.type}`
                                     )
 
                                     .setURL(item.link)
