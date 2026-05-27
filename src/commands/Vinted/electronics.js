@@ -522,6 +522,15 @@ export default {
                 ]
             });
 
+          if (!global.activeBrowsers) {
+    global.activeBrowsers = new Map();
+}
+
+global.activeBrowsers.set(
+    searchKey,
+    browser
+);
+
         const page =
             await browser.newPage();
 
@@ -625,54 +634,58 @@ await page.waitForTimeout(
     randomDelay
 );
 
-                        const items =
-                            await page.$$eval(
+                     const items =
+    await page.$$eval(
 
-                                '[data-testid="grid-item"]',
+        '[data-testid="grid-item"]',
 
-                                cards => {
+        cards => {
 
-                                    return cards.map(card => {
+            return cards.map(card => {
 
-                                        const title =
-                                            card.querySelector('img')?.alt ||
+                const title =
+                    card.querySelector('img')?.alt ||
 
-                                            card.querySelector(
-                                                '[data-testid="item-box-title"]'
-                                            )?.innerText ||
+                    card.querySelector(
+                        '[data-testid="item-box-title"]'
+                    )?.innerText ||
 
-                                            '';
+                    '';
 
-                                        const price =
-    card.querySelector(
-        '[data-testid="item-box-price"]'
-    )?.innerText ||
+                const price =
+                    card.querySelector(
+                        '[data-testid="item-box-price"]'
+                    )?.innerText ||
 
-    card.innerText ||
+                    card.innerText ||
 
-    '';
+                    '';
 
-                                        const link =
-                                            card.querySelector('a')?.href ||
+                const link =
+                    card.querySelector('a')?.href ||
 
-                                            '';
+                    '';
 
-                                        const image =
-                                            card.querySelector('img')?.src ||
+                const image =
+                    card.querySelector('img')?.src ||
 
-                                            '';
+                    '';
 
-                                        return {
+                const time =
+                    card.querySelector('time')
+                        ?.getAttribute('datetime') || '';
 
-                                            title,
-                                            price,
-                                            link,
-                                            image
-                                        };
-                                    });
-                                }
-                            );
+                return {
 
+                    title,
+                    price,
+                    link,
+                    image,
+                    time
+                };
+            });
+        }
+    );
                         console.log(
                             `${term}:`,
                             items.length
