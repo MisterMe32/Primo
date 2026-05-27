@@ -389,7 +389,7 @@ function detectProduct(title) {
     }
 
     // FUZZY MATCH THRESHOLD
-    if (bestScore >= 0.95) {
+    if (bestScore >= 1) {
 
         console.log(
             'FUZZY MATCH:',
@@ -545,6 +545,20 @@ global.activeBrowsers.set(
         const interval =
             setInterval(async () => {
 
+if (page.isClosed()) {
+
+    console.log(
+        "PAGE CLOSED"
+    );
+
+    clearInterval(interval);
+
+    activeSearches.delete(searchKey);
+
+    return;
+}
+
+
                 console.log(
                     "INTERVAL RUNNING:",
                     searchKey
@@ -697,6 +711,27 @@ for (const item of items) {
         "CHECKING ITEM:",
         item.title
     );
+const itemTime =
+    new Date(item.time).getTime();
+
+const nowTime =
+    Date.now();
+
+const ageMinutes =
+    (nowTime - itemTime) / 60000;
+
+if (ageMinutes > 60) {
+
+    console.log(
+        "TOO OLD:",
+        ageMinutes
+    );
+
+    continue;
+}
+
+
+
 
                             const title =
                                 item.title.toLowerCase();
@@ -788,7 +823,21 @@ const hardBlocked = [
 'kapot',
 'read description',
 'description',
-'lees beschrijving'
+'lees beschrijving',
+'ssd',
+'nvme',
+'memory card',
+'memoria',
+'ps vita',
+'vita',
+'blu ray',
+'bluray',
+'dvd',
+'fan',
+'cooler',
+'cooling',
+'ventilador',
+'enclosure'
 ];
 
 // BLOCK ALS 1 MATCHT
@@ -1053,10 +1102,14 @@ const profit =
     profit
 );
 
-                            if (profit < 20) {
-                                continue;
-                            }
+                          if (profit < 50) {
 
+    console.log(
+        "FAILED MIN PROFIT"
+    );
+
+    continue;
+}
                             console.log(
                                 "REACHED EMBED"
                             );
@@ -1082,7 +1135,7 @@ const profit =
                                                 '💰 Prijs',
 
                                             value:
-                                                `€${price}`,
+                                               `€${price.toFixed(2)}`,
 
                                             inline: true
                                         },
@@ -1092,7 +1145,7 @@ const profit =
                                                 '📈 Winst',
 
                                             value:
-                                                `€${profit}`,
+                                              `€${profit.toFixed(2)}`,
 
                                             inline: true
                                         },
