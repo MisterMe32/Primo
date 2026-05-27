@@ -815,6 +815,12 @@ const product =
                                         .replace(',', '.')
                                 );
 
+console.log(
+    "PARSED PRICE:",
+    price
+);
+
+
                             if (
                                 !price ||
                                 isNaN(price)
@@ -822,7 +828,11 @@ const product =
                                 continue;
                             }
 
-                           if (price > maxprijs) {
+                         if (price > maxprijs) {
+
+    console.log(
+        "FAILED MAXPRIJS CHECK"
+    );
 
     console.log(
         "SKIPPED MAX PRICE:",
@@ -844,6 +854,10 @@ if (
 ) {
 
     console.log(
+        "FAILED MINPRICE CHECK"
+    ); 
+
+    console.log(
         "PRICE TOO LOW"
     );
 
@@ -851,9 +865,13 @@ if (
 }
 
                             if (
-                                price >
-                                product.maxBuy + 40
-                            ) {
+    price >
+    product.maxBuy + 40
+) {
+
+    console.log(
+        "FAILED MAXBUY CHECK"
+    ); 
 
                                 console.log(
                                     "PRICE TOO HIGH"
@@ -868,6 +886,10 @@ const rawProfit =
     baseEstimatedValue - price;
 
 if (rawProfit < 40) {
+
+    console.log(
+        "FAILED PROFIT CHECK"
+    );
 
     console.log(
         "RAW PROFIT TOO LOW"
