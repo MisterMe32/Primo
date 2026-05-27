@@ -807,15 +807,25 @@ const product =
                                 continue;
                             }
 
-                          const cleanPrice =
-    item.price
-        .replace(',', '.')
-        .match(/\d+(\.\d+)?/);
+                     const matches =
+    item.price.match(/\d+,\d+/g);
 
 const price =
-    cleanPrice
-        ? parseFloat(cleanPrice[0])
+    matches && matches.length > 0
+        ? parseFloat(
+            matches[0].replace(',', '.')
+        )
         : 0;
+
+console.log(
+    "RAW PRICE:",
+    item.price
+);
+
+console.log(
+    "PARSED PRICE:",
+    price
+);
 
 console.log(
     "PARSED PRICE:",
