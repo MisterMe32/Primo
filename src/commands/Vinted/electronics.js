@@ -644,11 +644,13 @@ await page.waitForTimeout(
                                             '';
 
                                         const price =
-                                            card.querySelector(
-                                                '[data-testid="item-box-price"]'
-                                            )?.innerText ||
+    card.querySelector(
+        '[data-testid="item-box-price"]'
+    )?.innerText ||
 
-                                            '';
+    card.innerText ||
+
+    '';
 
                                         const link =
                                             card.querySelector('a')?.href ||
@@ -820,16 +822,6 @@ const price =
 console.log(
     "RAW PRICE:",
     item.price
-);
-
-console.log(
-    "PARSED PRICE:",
-    price
-);
-
-console.log(
-    "PARSED PRICE:",
-    price
 );
 
 console.log(
