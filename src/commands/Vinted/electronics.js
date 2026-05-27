@@ -33,6 +33,7 @@ const products = {
         ],
         resale: 420,
         maxBuy: 320,
+        minPrice:180,
         type: 'PS5 DISC'
     },
 
@@ -43,6 +44,7 @@ const products = {
         ],
         resale: 340,
         maxBuy: 260,
+        minPrice:150,
         type: 'PS5 DIGITAL'
     },
 
@@ -53,6 +55,7 @@ const products = {
         ],
         resale: 430,
         maxBuy: 330,
+        minPrice:220,
         type: 'PS5 SLIM'
     },
 
@@ -63,6 +66,7 @@ const products = {
         ],
         resale: 700,
         maxBuy: 560,
+        minPrice:350,
         type: 'PS5 PRO'
     },
 
@@ -77,6 +81,7 @@ const products = {
         ],
         resale: 240,
         maxBuy: 180,
+        minPrice: 120,
         type: 'SWITCH OLED'
     },
 
@@ -87,6 +92,7 @@ const products = {
         ],
         resale: 130,
         maxBuy: 90,
+        minPrice: 50,
         type: 'SWITCH LITE'
     },
 
@@ -97,6 +103,7 @@ const products = {
         ],
         resale: 170,
         maxBuy: 120,
+        minPrice: 50,
         type: 'SWITCH V1'
     },
 
@@ -107,6 +114,7 @@ const products = {
         ],
         resale: 190,
         maxBuy: 140,
+        minPrice: 50,
         type: 'SWITCH V2'
     },
 
@@ -122,6 +130,7 @@ const products = {
         ],
         resale: 240,
         maxBuy: 170,
+        minPrice: 100,
         type: 'IPHONE 11'
     },
 
@@ -133,6 +142,7 @@ const products = {
         ],
         resale: 340,
         maxBuy: 250,
+        minPrice: 160,
         type: 'IPHONE 12'
     },
 
@@ -144,6 +154,7 @@ const products = {
         ],
         resale: 460,
         maxBuy: 350,
+        minPrice: 250,
         type: 'IPHONE 13'
     },
 
@@ -155,6 +166,7 @@ const products = {
         ],
         resale: 650,
         maxBuy: 500,
+        minPrice: 350,
         type: 'IPHONE 14'
     },
 
@@ -166,6 +178,7 @@ const products = {
         ],
         resale: 850,
         maxBuy: 680,
+        minPrice: 500,
         type: 'IPHONE 15'
     },
 
@@ -181,6 +194,7 @@ const products = {
         ],
         resale: 300,
         maxBuy: 220,
+        minPrice:120,
         type: 'IPAD'
     },
 
@@ -192,6 +206,7 @@ const products = {
         ],
         resale: 500,
         maxBuy: 380,
+        minPrice:220,
         type: 'IPAD AIR'
     },
 
@@ -203,6 +218,7 @@ const products = {
         ],
         resale: 850,
         maxBuy: 650,
+        minPrice:350,
         type: 'IPAD PRO'
     },
 
@@ -218,6 +234,7 @@ const products = {
         ],
         resale: 850,
         maxBuy: 650,
+        minPrice:450,
         type: 'MACBOOK AIR'
     },
 
@@ -229,6 +246,7 @@ const products = {
         ],
         resale: 1400,
         maxBuy: 1100,
+        minPrice:700,
         type: 'MACBOOK PRO'
     },
 
@@ -243,6 +261,7 @@ const products = {
         ],
         resale: 380,
         maxBuy: 280,
+        minPrice:180,
         type: 'STEAM DECK LCD'
     },
 
@@ -252,6 +271,7 @@ const products = {
         ],
         resale: 550,
         maxBuy: 430,
+        minPrice:300,
         type: 'STEAM DECK OLED'
     },
 
@@ -266,6 +286,7 @@ const products = {
         ],
         resale: 500,
         maxBuy: 380,
+        minPrice: 220,
         type: 'S23'
     },
 
@@ -276,6 +297,7 @@ const products = {
         ],
         resale: 750,
         maxBuy: 600,
+        minPrice: 350,
         type: 'S23 ULTRA'
     },
 
@@ -286,6 +308,7 @@ const products = {
         ],
         resale: 650,
         maxBuy: 500,
+        minPrice: 320,
         type: 'S24'
     },
 
@@ -296,6 +319,7 @@ const products = {
         ],
         resale: 950,
         maxBuy: 780,
+        minPrice: 500,
         type: 'S24 ULTRA'
     }
 };
@@ -666,63 +690,6 @@ for (const item of items) {
 
 console.log("NEW FILTER SYSTEM ACTIVE");
 // ALLEEN GOEDE PRODUCT TYPES TOESTAAN
-const allowedWords = [
-
-    // PS5
-    'ps5',
-    'playstation 5',
-    'ps5 slim',
-    'ps5 pro',
-    'ps5 digital',
-    'ps5 disc',
-
-    // SWITCH
-    'switch oled',
-    'switch lite',
-    'nintendo switch',
-
-    // IPHONE
-    'iphone 11',
-    'iphone 12',
-    'iphone 13',
-    'iphone 14',
-    'iphone 15',
-
-    // IPAD
-    'ipad 9',
-    'ipad 10',
-    'ipad air',
-    'ipad pro',
-
-    // MACBOOK
-    'macbook air',
-    'macbook pro',
-
-    // SAMSUNG
-    's23',
-    's24',
-    'galaxy s23',
-    'galaxy s24',
-
-    // STEAMDECK
-    'steam deck',
-    'steamdeck'
-];
-
-// MOET MINSTENS 1 MATCHEN
-if (
-    !allowedWords.some(word =>
-        title.includes(word)
-    )
-) {
-
-    console.log(
-        "NOT ALLOWED:",
-        title
-    );
-
-    continue;
-}
 
 // HARD BLOCKS
 const hardBlocked = [
@@ -779,19 +746,13 @@ const hardBlocked = [
     'case',
     'skin',
     'faceplate',
-    'disc',
 'cd',
 'steel case',
 'collector',
-'edition',
 'mouse',
 'keyboard',
 'stand',
 'fan',
-'cooler',
-'plate',
-'shell',
-'housing',
 'trigger',
 'repair',
 'reparatie',
@@ -799,7 +760,7 @@ const hardBlocked = [
 'kapot',
 'read description',
 'description',
-'leer beschrijving'
+'lees beschrijving'
 ];
 
 // BLOCK ALS 1 MATCHT
@@ -863,6 +824,19 @@ console.log(
     "PRICE:",
     price
 );
+
+if (
+    price <
+    product.minPrice
+) {
+
+    console.log(
+        "PRICE TOO LOW"
+    );
+
+    continue;
+}
+
                             if (
                                 price >
                                 product.maxBuy + 40
@@ -888,17 +862,51 @@ if (rawProfit < 40) {
 
     continue;
 }
-                            console.log(
-                                "START AI ANALYZE"
-                            );
+
+const suspiciousWords = [
+
+    'read description',
+    'beschrijving',
+    'description',
+    'tablet only',
+    'console only',
+    'see description',
+    'zonder',
+    'only',
+    'defect',
+    'kapot'
+];
+
+const needsAI =
+    suspiciousWords.some(word =>
+        title.includes(word)
+    );
+
+
+                            
 
                            const cacheKey =
     `${title}-${price}`;
 
-let ai =
-    aiCache.get(cacheKey);
+    let ai = {
 
-if (!ai) {
+    isAccessory: false,
+    isScam: false,
+    flipScore: 85,
+    risk: 'low',
+    summary: 'Auto approved'
+};
+
+if (needsAI) {
+
+console.log(
+                                "START AI ANALYZE"
+                            );
+
+    ai =
+        aiCache.get(cacheKey);
+
+    if (!ai) {
 
     ai = await Promise.race([
 
@@ -921,6 +929,7 @@ if (!ai) {
             cacheKey,
             ai
         );
+            }
     }
 }
 
