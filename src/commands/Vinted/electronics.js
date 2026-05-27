@@ -327,6 +327,19 @@ function detectProduct(title) {
 
     title = title.toLowerCase();
 
+    // ACCESSORY / CASE BLOCK
+    if (
+        title.includes('case') ||
+        title.includes('hoes') ||
+        title.includes('hülle') ||
+        title.includes('fundas') ||
+        title.includes('cover') ||
+        title.includes('coque') ||
+        title.includes('capa')
+    ) {
+        return null;
+    }
+
     let bestMatch = null;
 
     let bestScore = 0;
@@ -376,7 +389,7 @@ function detectProduct(title) {
     }
 
     // FUZZY MATCH THRESHOLD
-    if (bestScore >= 0.85) {
+    if (bestScore >= 0.95) {
 
         console.log(
             'FUZZY MATCH:',
