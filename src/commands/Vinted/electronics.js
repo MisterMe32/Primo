@@ -16,7 +16,7 @@ const runningSearches = new Map();
 const recentlySent = new Map();
 const aiCache = new Map();
 const sentDeals = new Set();
-let firstRun = false;
+let firstRun = true;
 
 // PRODUCT DATABASE
 const products = {
@@ -662,10 +662,13 @@ if (
     return;
 }
 
+if (!page.isClosed()) {
 
-await page.waitForTimeout(
-    randomDelay
-);
+    await page.waitForTimeout(
+        randomDelay
+    );
+
+}
 
                      const items =
     await page.$$eval(
@@ -739,7 +742,7 @@ const nowTime =
 const ageMinutes =
     (nowTime - itemTime) / 60000;
 
-if (ageMinutes > 10) {
+if (ageMinutes > 4) {
 
     console.log(
         "TOO OLD:",
@@ -909,16 +912,6 @@ const price =
         )
         : 0;
 
-console.log(
-    "RAW PRICE:",
-    item.price
-);
-
-console.log(
-    "PARSED PRICE:",
-    price
-);
-
 
                             if (
                                 !price ||
@@ -940,12 +933,6 @@ console.log(
 
     continue;
 }
-console.log(
-    "MAXBUY:",
-    product.maxBuy,
-    "PRICE:",
-    price
-);
 
 if (
     price <
@@ -1124,11 +1111,7 @@ const profit =
 );
     const isHotDeal =
     profit >= 120;
-                              
-                                console.log(
-    "PROFIT:",
-    profit
-);
+                            
 
                           if (profit < 50) {
 
@@ -1142,7 +1125,7 @@ const profit =
 
 
 const uniqueKey =
-`${product.type}-${Math.round(price)}`;
+item.link;
 
 if (
     sentDeals.has(uniqueKey)
@@ -1161,7 +1144,7 @@ setTimeout(() => {
 
     sentDeals.delete(uniqueKey);
 
-}, 1000 * 60 * 60);
+}, 1000 * 60 * 15);
                             console.log(
                                 "REACHED EMBED"
                             );
