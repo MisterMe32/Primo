@@ -15,6 +15,7 @@ const activeSearches = new Set();
 const runningSearches = new Map();
 const recentlySent = new Map();
 const aiCache = new Map();
+const sentDeals = new Set();
 let firstRun = false;
 
 // PRODUCT DATABASE
@@ -644,6 +645,24 @@ if (page.isClosed()) {
         Math.random() * 2500
     ) + 2000;
 
+
+
+if (
+    page.isClosed()
+) {
+
+    console.log(
+        "PAGE CLOSED STOP"
+    );
+
+    clearInterval(interval);
+
+    activeSearches.delete(searchKey);
+
+    return;
+}
+
+
 await page.waitForTimeout(
     randomDelay
 );
@@ -720,7 +739,7 @@ const nowTime =
 const ageMinutes =
     (nowTime - itemTime) / 60000;
 
-if (ageMinutes > 60) {
+if (ageMinutes > 10) {
 
     console.log(
         "TOO OLD:",
@@ -837,7 +856,16 @@ const hardBlocked = [
 'cooler',
 'cooling',
 'ventilador',
-'enclosure'
+'enclosure',
+'box only',
+'doos only',
+'faceplate',
+'shell',
+'housing',
+'parts only',
+'console stand',
+'vertical stand',
+'cooling stand'
 ];
 
 // BLOCK ALS 1 MATCHT
@@ -1110,6 +1138,30 @@ const profit =
 
     continue;
 }
+
+
+
+const uniqueKey =
+`${product.type}-${Math.round(price)}`;
+
+if (
+    sentDeals.has(uniqueKey)
+) {
+
+    console.log(
+        "DUPLICATE BLOCKED"
+    );
+
+    continue;
+}
+
+sentDeals.add(uniqueKey);
+
+setTimeout(() => {
+
+    sentDeals.delete(uniqueKey);
+
+}, 1000 * 60 * 60);
                             console.log(
                                 "REACHED EMBED"
                             );
@@ -1255,7 +1307,10 @@ await channel.send({
 
                 } catch (err) {
 
-                    console.log(err);
+                   console.log(
+    "SCAN ERROR:",
+    err.message
+);
 
                 } finally {
 
