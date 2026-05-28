@@ -11,7 +11,8 @@ const openai = new OpenAI({
 });
 
 const seenItems = new Set();
-const activeSearches = new Set();
+global.activeSearches =
+    global.activeSearches || new Set();
 const runningSearches = new Map();
 const recentlySent = new Map();
 const aiCache = new Map();
@@ -496,14 +497,14 @@ export default {
         const searchKey =
             `electronics-${maxprijs}`;
 
-        if (activeSearches.has(searchKey)) {
+        if (global.activeSearches.has(searchKey)) {
 
             return interaction.reply(
                 '⚠️ Scanner draait al.'
             );
         }
 
-        activeSearches.add(searchKey);
+        global.activeSearches.add(searchKey);
 
         await interaction.reply(
             `🔎 AI Electronics scanner gestart onder €${maxprijs}`
@@ -554,7 +555,7 @@ if (page.isClosed()) {
 
     clearInterval(interval);
 
-    activeSearches.delete(searchKey);
+    global.activeSearches.delete(searchKey);
 
     return;
 }
@@ -622,6 +623,7 @@ if (page.isClosed()) {
 ];
 
                     for (const term of searchTerms) {
+
 
                         const url =
 `https://www.vinted.nl/catalog?search_text=${encodeURIComponent(term)}&order=newest_first`;

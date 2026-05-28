@@ -9,57 +9,70 @@ export default {
 
         try {
 
-         for (const [key, interval] of global.activeIntervals.entries()) {
-    console.log("STOPPING:", interval);
-            clearInterval(interval);
-}
+            // STOP ALLE INTERVALS
+            if (global.activeIntervals) {
 
-global.activeIntervals.clear();
-console.log("ALL INTERVALS CLEARED");
+                for (const [key, interval] of global.activeIntervals.entries()) {
 
+                    console.log("STOPPING:", key);
 
-if (global.activeBrowsers) {
+                    clearInterval(interval);
+                }
 
-    for (
-        const [key, browser]
-        of global.activeBrowsers.entries()
-    ) {
+                global.activeIntervals.clear();
 
-        try {
+                console.log("ALL INTERVALS CLEARED");
+            }
 
-            await browser.close();
+            // SLUIT ALLE BROWSERS
+            if (global.activeBrowsers) {
 
-            console.log(
-                "BROWSER CLOSED:",
-                key
-            );
+                for (const [key, browser] of global.activeBrowsers.entries()) {
 
-        } catch (e) {
+                    try {
 
-            console.log(
-                "BROWSER CLOSE ERROR:",
-                e.message
-            );
-        }
-    }
+                        await browser.close();
 
-    global.activeBrowsers.clear();
-}
-if (global.vintedInterval) {
+                        console.log(
+                            "BROWSER CLOSED:",
+                            key
+                        );
 
-    clearInterval(global.vintedInterval);
+                    } catch (e) {
 
-    global.vintedInterval = null;
-}
+                        console.log(
+                            "BROWSER CLOSE ERROR:",
+                            e.message
+                        );
+                    }
+                }
 
-global.activeScanner = false;
-global.currentScanner = null;
+                global.activeBrowsers.clear();
+            }
 
+            // RESET OUDE INTERVAL
+            if (global.vintedInterval) {
 
-return interaction.reply({
-    content: '🛑 Alle searches gestopt.',
-    ephemeral: true
-});
+                clearInterval(global.vintedInterval);
+
+                global.vintedInterval = null;
+            }
+
+            // RESET ACTIVE SEARCHES
+            if (global.activeSearches) {
+
+                global.activeSearches.clear();
+            }
+
+            // RESET SCANNER STATUS
+            global.activeScanner = false;
+            global.currentScanner = null;
+
+            return interaction.reply({
+                content: '🛑 Alle searches gestopt.',
+                ephemeral: true
+            });
+
         } catch (err) {
 
             console.log(err);
