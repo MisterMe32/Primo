@@ -16,14 +16,34 @@ export default {
 
 global.activeIntervals.clear();
 console.log("ALL INTERVALS CLEARED");
-if (global.activeBrowsers) {
-  for (const [key, browser] of global.activeBrowsers.entries()) {
-    try {
-      browser.close();
-    } catch (e) {}
 
-    global.activeBrowsers.delete(key);
-  }
+
+if (global.activeBrowsers) {
+
+    for (
+        const [key, browser]
+        of global.activeBrowsers.entries()
+    ) {
+
+        try {
+
+            await browser.close();
+
+            console.log(
+                "BROWSER CLOSED:",
+                key
+            );
+
+        } catch (e) {
+
+            console.log(
+                "BROWSER CLOSE ERROR:",
+                e.message
+            );
+        }
+    }
+
+    global.activeBrowsers.clear();
 }
 if (global.vintedInterval) {
 
