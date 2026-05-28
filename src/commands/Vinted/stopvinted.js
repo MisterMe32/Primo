@@ -51,6 +51,11 @@ if (global.vintedInterval) {
 
     global.vintedInterval = null;
 }
+
+global.activeScanner = false;
+global.currentScanner = null;
+
+
 return interaction.reply({
     content: '🛑 Alle searches gestopt.',
     ephemeral: true
