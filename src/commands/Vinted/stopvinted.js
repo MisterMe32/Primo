@@ -50,17 +50,7 @@ if (global.vintedInterval) {
     clearInterval(global.vintedInterval);
 
     global.vintedInterval = null;
-if (global.activeIntervals) {
-
-    for (const interval of global.activeIntervals.values()) {
-        clearInterval(interval);
-    }
-
-    global.activeIntervals.clear();
 }
-
-}
-
 return interaction.reply({
     content: '🛑 Alle searches gestopt.',
     ephemeral: true
