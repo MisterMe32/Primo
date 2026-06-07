@@ -17,7 +17,7 @@ const runningSearches = new Map();
 const recentlySent = new Map();
 const aiCache = new Map();
 const sentDeals = new Set();
-let firstRun = true;
+let firstRun = false;
 
 // PRODUCT DATABASE
 const products = {
@@ -866,7 +866,9 @@ if (
 
     continue;
 }
-
+console.log(
+    "REACHED PRODUCT DETECTION"
+);
 const product =
     detectProduct(title);
     console.log(
