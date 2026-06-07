@@ -735,42 +735,6 @@ for (const item of items) {
         "CHECKING ITEM:",
         item.title
     );
-if (!item.time) {
-
-    console.log(
-        "NO TIMESTAMP"
-    );
-
-    continue;
-}
-
-const itemTime =
-    new Date(item.time).getTime();
-
-if (isNaN(itemTime)) {
-
-    console.log(
-        "INVALID TIMESTAMP"
-    );
-
-    continue;
-}
-
-const ageMinutes =
-    (Date.now() - itemTime) / 60000;
-
-if (ageMinutes > 5) {
-
-    console.log(
-        "TOO OLD:",
-        ageMinutes
-    );
-
-    continue;
-}
-
-
-
 
                             const title =
                                 item.title.toLowerCase();
