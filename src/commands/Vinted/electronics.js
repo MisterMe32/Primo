@@ -890,12 +890,32 @@ const product =
 
 const price =
     matches && matches.length > 0
+
         ? parseFloat(
             matches[0].replace(',', '.')
         )
         : 0;
 
+if (item.time) {
 
+    const listingTime =
+        new Date(item.time).getTime();
+
+    const ageMinutes =
+        (Date.now() - listingTime) /
+        1000 / 60;
+
+    if (ageMinutes > 5) {
+
+        console.log(
+            "TOO OLD:",
+            ageMinutes.toFixed(1),
+            "minutes"
+        );
+
+        continue;
+    }
+}
                             if (
                                 !price ||
                                 isNaN(price)
@@ -982,9 +1002,7 @@ const suspiciousWords = [
 ];
 
 const needsAI =
-    suspiciousWords.some(word =>
-        title.includes(word)
-    );
+    rawProfit >= 120;
 
 
                             
@@ -1108,7 +1126,7 @@ const profit =
 
 
 const uniqueKey =
-item.link;
+item.link.split('?')[0];
 
 if (
     sentDeals.has(uniqueKey)
