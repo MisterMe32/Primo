@@ -404,14 +404,19 @@ function detectProduct(title) {
 
     return null;
 }
-async function analyzeDealAI({ title, price }) {
+async function analyzeDealAI({
+    title,
+    price,
+    description
+}) {
 
     try {
 
         const prompt = `
 Titel: ${title}
 Prijs: €${price}
-
+Beschrijving:
+${description}
 Analyseer deze Vinted listing als professionele reseller.
 
 Geef ALLEEN geldige JSON terug:
@@ -754,6 +759,27 @@ for (const item of items) {
 
                           seenItems.add(item.link);
 
+                        if (item.time) {
+
+    const listingTime =
+        new Date(item.time).getTime();
+
+    const ageMinutes =
+        (Date.now() - listingTime) /
+        1000 / 60;
+
+    if (ageMinutes > 5) {
+
+        console.log(
+            "TOO OLD:",
+            ageMinutes.toFixed(1),
+            "minutes"
+        );
+
+        continue;
+    }
+}
+
 console.log("NEW FILTER SYSTEM ACTIVE");
 // ALLEEN GOEDE PRODUCT TYPES TOESTAAN
 
@@ -852,6 +878,81 @@ const hardBlocked = [
 'cooling stand'
 ];
 
+const descriptionBlocked = [
+
+    // IPHONE
+    'face id defect',
+    'face id werkt niet',
+    'icloud',
+    'activation lock',
+
+    // BATTERY
+    'battery health 7',
+    'battery health 6',
+    'accu 7',
+    'accu 6',
+    '79%',
+'78%',
+'77%',
+'76%',
+'75%',
+'74%',
+'73%',
+'72%',
+'71%',
+'70%',
+'battery 79',
+'battery 78',
+'battery 77',
+'battery 76',
+'battery 75',
+'battery 74',
+'battery 73',
+'battery 72',
+'battery 71',
+'battery 70',
+'batterij vervangen',
+'battery replacement',
+'battery vervangen',
+'accu vervangen',
+'service battery',
+'battery service',
+'battery health 80',
+'battery health 79',
+'battery health 78',
+'battery health 77',
+'battery health 76',
+'battery health 75',
+
+    // SCHERM
+    'crack',
+    'cracked',
+    'screen crack',
+    'glass crack',
+    'barst',
+    'gebarsten',
+
+    // SWITCH
+    'stick drift',
+    'joycon drift',
+
+    // PS5
+    'hdmi defect',
+    'no signal',
+    'overheating',
+
+    // ALGEMEEN
+    'defect',
+    'kapot',
+    'werkt niet',
+    'for parts',
+    'onderdelen'
+];
+
+
+
+
+
 // BLOCK ALS 1 MATCHT
 if (
     hardBlocked.some(word =>
@@ -884,6 +985,51 @@ const product =
 
                                 continue;
                             }
+let description = '';
+
+try {
+
+    const itemPage =
+        await browser.newPage();
+
+    await itemPage.goto(
+        item.link,
+        {
+            waitUntil:
+                'domcontentloaded',
+            timeout: 30000
+        }
+    );
+
+    description =
+        (
+            await itemPage.textContent(
+                'body'
+            )
+        )?.toLowerCase() || '';
+
+    await itemPage.close();
+
+} catch {
+
+    console.log(
+        'DESCRIPTION FAILED'
+    );
+}
+
+if (
+    descriptionBlocked.some(word =>
+        description.includes(word)
+    )
+) {
+
+    console.log(
+        "DESCRIPTION BLOCKED"
+    );
+
+    continue;
+}
+
 
                      const matches =
     item.price.match(/\d+,\d+/g);
@@ -896,26 +1042,7 @@ const price =
         )
         : 0;
 
-if (item.time) {
 
-    const listingTime =
-        new Date(item.time).getTime();
-
-    const ageMinutes =
-        (Date.now() - listingTime) /
-        1000 / 60;
-
-    if (ageMinutes > 5) {
-
-        console.log(
-            "TOO OLD:",
-            ageMinutes.toFixed(1),
-            "minutes"
-        );
-
-        continue;
-    }
-}
                             if (
                                 !price ||
                                 isNaN(price)
@@ -1002,7 +1129,7 @@ const suspiciousWords = [
 ];
 
 const needsAI =
-    rawProfit >= 120;
+    rawProfit >= 80;
 
 
                             
@@ -1010,13 +1137,13 @@ const needsAI =
                            const cacheKey =
     `${title}-${price}`;
 
-    let ai = {
+   let ai = {
 
     isAccessory: false,
     isScam: false,
-    flipScore: 85,
-    risk: 'low',
-    summary: 'Auto approved'
+    flipScore: 60,
+    risk: 'medium',
+    summary: 'Price based approval'
 };
 
 if (needsAI) {
@@ -1030,12 +1157,13 @@ console.log(
 
     if (!ai) {
 
-    ai = await Promise.race([
+   ai = await Promise.race([
 
-        analyzeDealAI({
-            title: item.title,
-            price
-        }),
+    analyzeDealAI({
+        title: item.title,
+        price,
+        description
+    }),
 
         new Promise(resolve =>
             setTimeout(
@@ -1114,7 +1242,7 @@ const profit =
     profit >= 120;
                             
 
-                          if (profit < 50) {
+                          if (profit < 80) {
 
     console.log(
         "FAILED MIN PROFIT"
