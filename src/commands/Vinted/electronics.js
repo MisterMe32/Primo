@@ -330,17 +330,27 @@ function detectProduct(title) {
     title = title.toLowerCase();
 
     // ACCESSORY / CASE BLOCK
-    if (
-        title.includes('case') ||
-        title.includes('hoes') ||
-        title.includes('hülle') ||
-        title.includes('fundas') ||
-        title.includes('cover') ||
-        title.includes('coque') ||
-        title.includes('capa')
-    ) {
-        return null;
-    }
+  if (
+    title.includes('case') ||
+    title.includes('hoes') ||
+    title.includes('hoesje') ||
+    title.includes('hülle') ||
+    title.includes('fundas') ||
+    title.includes('funda') ||
+    title.includes('cover') ||
+    title.includes('coque') ||
+    title.includes('capa') ||
+    title.includes('custodia') ||
+    title.includes('screenprotector') ||
+    title.includes('protector') ||
+    title.includes('charger') ||
+    title.includes('chargeur') ||
+    title.includes('kabel') ||
+    title.includes('cable') ||
+    title.includes('powerbank')
+) {
+    return null;
+}
 
     let bestMatch = null;
 
@@ -664,7 +674,7 @@ if (
 
     clearInterval(interval);
 
-    activeSearches.delete(searchKey);
+    global.activeSearches.delete(searchKey);
 
     return;
 }
@@ -836,6 +846,15 @@ const hardBlocked = [
     'tablet only',
     'cover',
     'case',
+    'hoesje',
+'funda',
+'custodia',
+'screenprotector',
+'protector',
+'powerbank',
+'chargeur',
+'lens protector',
+'camera protector',
     'skin',
     'faceplate',
 'cd',
@@ -1041,6 +1060,22 @@ const price =
             matches[0].replace(',', '.')
         )
         : 0;
+
+        if (
+    product.type.includes('IPHONE') &&
+    price < 50
+) {
+    console.log('IPHONE TOO CHEAP');
+    continue;
+}
+
+if (
+    product.type.includes('S24') &&
+    price < 200
+) {
+    console.log('S24 TOO CHEAP');
+    continue;
+}
 
 
                             if (
