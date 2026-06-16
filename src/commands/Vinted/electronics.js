@@ -401,7 +401,7 @@ function detectProduct(title) {
     }
 
     // FUZZY MATCH THRESHOLD
-    if (bestScore >= 0.9) {
+    if (bestScore >= 0.7) {
 
         console.log(
             'FUZZY MATCH:',
@@ -802,6 +802,12 @@ const hardBlocked = [
     'dualshock',
     'joycon',
     'headset',
+    'game',
+'games',
+'jeu',
+'gioco',
+'juego',
+'spiel',
     'headphones',
     'charger',
     'dock',
@@ -968,6 +974,9 @@ const descriptionBlocked = [
 
 
 // BLOCK ALS 1 MATCHT
+
+
+
 if (
     hardBlocked.some(word =>
         title.includes(word)
@@ -986,8 +995,14 @@ console.log(
 );
 const product =
     detectProduct(title);
-    console.log(
-    "DETECTED PRODUCT:",
+
+console.log(
+    "TITLE:",
+    title
+);
+
+console.log(
+    "DETECTED:",
     product?.type
 );
 
