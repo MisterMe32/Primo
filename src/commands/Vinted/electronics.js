@@ -1016,11 +1016,14 @@ try {
     );
 
     description =
-        (
-            await itemPage.textContent(
-                'body'
-            )
-        )?.toLowerCase() || '';
+(
+    await itemPage.textContent(
+        '[data-testid="item-description"]'
+    )
+)?.toLowerCase() || '';
+
+description =
+description.slice(0, 1000);
 
     await itemPage.close();
 
@@ -1188,7 +1191,7 @@ const suspiciousWords = [
 ];
 
 const needsAI =
-    rawProfit >= 80;
+    rawProfit >= 120;
 
 
                             
