@@ -1039,15 +1039,21 @@ try {
         }
     );
 
+
     description =
 (
-    await itemPage.textContent(
-        '[data-testid="item-description"]'
-    )
+    await itemPage.textContent('body')
 )?.toLowerCase() || '';
+
+
 
 description =
 description.slice(0, 1000);
+
+console.log(
+    "DESCRIPTION:",
+    description
+);
 
     await itemPage.close();
 
@@ -1056,12 +1062,42 @@ description.slice(0, 1000);
     console.log(
         'DESCRIPTION FAILED'
     );
+
+    continue;
 }
 
 const blockedWord =
     descriptionBlocked.find(word =>
         description.includes(word)
     );
+
+    if (
+    product.type.includes('IPHONE')
+) {
+
+    const batteryMatch =
+        description.match(/(\d+)%/);
+
+    if (batteryMatch) {
+
+        const battery =
+            parseInt(batteryMatch[1]);
+
+        console.log(
+            "BATTERY:",
+            battery
+        );
+
+        if (battery < 80) {
+
+            console.log(
+                "BATTERY TOO LOW"
+            );
+
+            continue;
+        }
+    }
+}
 
 if (blockedWord) {
 
