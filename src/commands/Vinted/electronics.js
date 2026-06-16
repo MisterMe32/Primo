@@ -472,10 +472,19 @@ Alleen COMPLETE werkende apparaten toestaan.
             });
 
         const text =
-            completion.choices[0]
-                .message.content;
+completion.choices[0]
+.message.content
+.replace(/```json/g, '')
+.replace(/```/g, '')
+.trim();
 
-        return JSON.parse(text);
+console.log(
+    "AI RAW RESPONSE:",
+    text
+);
+
+
+return JSON.parse(text);
 
     } catch (err) {
 
