@@ -401,7 +401,7 @@ function detectProduct(title) {
     }
 
     // FUZZY MATCH THRESHOLD
-    if (bestScore >= 1) {
+    if (bestScore >= 0.6) {
 
         console.log(
             'FUZZY MATCH:',
@@ -1062,6 +1062,12 @@ const price =
             matches[0].replace(',', '.')
         )
         : 0;
+
+console.log(
+    "PRICE FOUND:",
+    price
+);
+
 
         if (
     product.type.includes('IPHONE') &&
