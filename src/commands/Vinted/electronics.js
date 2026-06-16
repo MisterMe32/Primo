@@ -236,7 +236,7 @@ const products = {
         ],
         resale: 850,
         maxBuy: 650,
-        minPrice:450,
+        minPrice:150,
         type: 'MACBOOK AIR'
     },
 
@@ -248,7 +248,7 @@ const products = {
         ],
         resale: 1400,
         maxBuy: 1100,
-        minPrice:700,
+        minPrice:250,
         type: 'MACBOOK PRO'
     },
 
@@ -401,7 +401,7 @@ function detectProduct(title) {
     }
 
     // FUZZY MATCH THRESHOLD
-    if (bestScore >= 0.6) {
+    if (bestScore >= 0.9) {
 
         console.log(
             'FUZZY MATCH:',
@@ -961,11 +961,6 @@ const descriptionBlocked = [
     'overheating',
 
     // ALGEMEEN
-    'defect',
-    'kapot',
-    'werkt niet',
-    'for parts',
-    'onderdelen'
 ];
 
 
