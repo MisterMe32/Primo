@@ -1157,6 +1157,13 @@ if (
 
     continue;
 } 
+
+console.log(
+    "PASSED PRICE FILTERS:",
+    product.type,
+    price
+);
+
 const baseEstimatedValue =
     product.resale;
 
@@ -1207,6 +1214,13 @@ const needsAI =
     risk: 'medium',
     summary: 'Price based approval'
 };
+
+
+
+console.log(
+    "RAW PROFIT:",
+    rawProfit
+);
 
 if (needsAI) {
 
