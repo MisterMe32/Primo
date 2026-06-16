@@ -168,7 +168,7 @@ const products = {
         ],
         resale: 650,
         maxBuy: 500,
-        minPrice: 350,
+        minPrice: 250,
         type: 'IPHONE 14'
     },
 
@@ -1036,18 +1036,20 @@ try {
     );
 }
 
-if (
-    descriptionBlocked.some(word =>
+const blockedWord =
+    descriptionBlocked.find(word =>
         description.includes(word)
-    )
-) {
+    );
+
+if (blockedWord) {
 
     console.log(
-        "DESCRIPTION BLOCKED"
+        "DESCRIPTION BLOCKED BY:",
+        blockedWord
     );
 
     continue;
-}
+} 
 
 
                      const matches =
@@ -1106,30 +1108,51 @@ if (
 
     console.log(
         "FAILED MINPRICE CHECK"
-    ); 
+    );
 
     console.log(
-        "PRICE TOO LOW"
+        "PRODUCT:",
+        product.type
+    );
+
+    console.log(
+        "PRICE:",
+        price
+    );
+
+    console.log(
+        "MINPRICE:",
+        product.minPrice
     );
 
     continue;
 }
-
-                            if (
+if (
     price >
     product.maxBuy + 40
 ) {
 
     console.log(
         "FAILED MAXBUY CHECK"
-    ); 
+    );
 
-                                console.log(
-                                    "PRICE TOO HIGH"
-                                );
+    console.log(
+        "PRODUCT:",
+        product.type
+    );
 
-                                continue;
-                            }
+    console.log(
+        "PRICE:",
+        price
+    );
+
+    console.log(
+        "MAXBUY:",
+        product.maxBuy
+    );
+
+    continue;
+} 
 const baseEstimatedValue =
     product.resale;
 
@@ -1277,15 +1300,24 @@ const profit =
     profit >= 120;
                             
 
-                          if (profit < 80) {
+                         if (profit < 80) {
 
     console.log(
-        "FAILED MIN PROFIT"
+        "FAILED PROFIT CHECK"
+    );
+
+    console.log(
+        "PRODUCT:",
+        product.type
+    );
+
+    console.log(
+        "PROFIT:",
+        profit
     );
 
     continue;
 }
-
 
 
 const uniqueKey =
@@ -1438,6 +1470,21 @@ recentlySent.set(
 );
 console.log(
     "DISCORD ALERT SENT"
+);
+
+console.log(
+    "PRODUCT:",
+    product.type
+);
+
+console.log(
+    "PRICE:",
+    price
+);
+
+console.log(
+    "PROFIT:",
+    profit
 );
 
 await channel.send({
